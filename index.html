@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
-<title>Belajar Perkalian & Pembagian — v4.10.2 (Fix Button Visibility)</title>
+<title>Belajar Perkalian & Pembagian — v4.10.3</title>
 <style>
 :root{--bg:#f7f9fc;--panel:#fff;--primary:#0b76c2;--accent:#0ea5a3;--muted:#6b7280;--card-radius:12px;--nav-height:64px;--grid-size:110px}
 *{box-sizing:border-box;font-family:Inter,system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif}
@@ -70,7 +70,7 @@ footer.app-footer{position:fixed;left:0;right:0;bottom:0;display:flex;justify-co
       <button id="headerBack" onclick="headerBack()" title="Kembali"><span class="ico">←</span> <span id="headerBackText"></span></button>
       <div>
         <div class="header-title">Belajar Perkalian & Pembagian</div>
-        <div style="font-size:11px;opacity:0.95">oleh MD.Prasojo — SMPN 05 Lumajang (v4.10.2)</div>
+        <div style="font-size:11px;opacity:0.95">oleh MD.Prasojo — SMPN 05 Lumajang (v4.10.3)</div>
       </div>
     </div>
     <div>
@@ -93,7 +93,7 @@ footer.app-footer{position:fixed;left:0;right:0;bottom:0;display:flex;justify-co
         <div class="card" onclick="navigate('progress')" style="cursor:pointer"><strong>Progres Belajar</strong><div class="small">Perkalian 1–10</div></div>
         <div class="card" onclick="navigate('latihan_mul')" style="cursor:pointer"><strong>Latihan Perkalian</strong><div class="small">Kelompok / Acak</div></div>
         <div class="card" onclick="navigate('latihan_div')" style="cursor:pointer"><strong>Latihan Pembagian</strong><div class="small">Pembagian bilangan asli</div></div>
-        <div class="card" onclick="navigate('riwayat')" style="cursor:pointer"><strong>Riwayat & Pengaturan</strong><div class="small">Hasil & WA Guru</div></div>
+        <div class="card" onclick="navigate('riwayat')" style="cursor:pointer"><strong>Riwayat & Bagikan</strong><div class="small">Hasil & WA Guru</div></div>
       </div>
     </div>
 
@@ -169,6 +169,8 @@ footer.app-footer{position:fixed;left:0;right:0;bottom:0;display:flex;justify-co
       <div style="height:8px"></div>
       <div class="small">Warna: hijau = hafal, kuning = belum hafal, merah = belum pernah dikerjakan.</div>
       <div style="height:8px"></div>
+      <div class="small">Dinyatakan menguasai jika telah menyelesaikan latihan Drill untuk semua mode isian dan PG dengan jumlah soal 10 atau 15. Klik kotak untuk melihat riwayat.</div>
+      <div style="height:8px"></div>
       <div id="progressGrid" class="progress-grid"></div>
     </div>
 
@@ -218,8 +220,7 @@ footer.app-footer{position:fixed;left:0;right:0;bottom:0;display:flex;justify-co
         </div>
 
       </div>
-      <div style="height:8px"></div>
-      <div style="display:flex;gap:8px;justify-content:flex-end;">
+      <div style="display:flex;gap:8px;justify-content:flex-start; margin-top: 10px;">
         <button class="btn outline" onclick="endQuizEarly()">Selesaikan Lebih Awal</button>
       </div>
     </div>
