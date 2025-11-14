@@ -523,13 +523,13 @@ function updateProgressDataFromEntry(entry){
       const rec = { mode: entry.meta && entry.meta.mode ? entry.meta.mode : (entry.type && entry.type.includes('Drill') ? (entry.meta && entry.meta.mode?entry.meta.mode:'input') : 'input'), difficulty: entry.meta && entry.meta.difficulty ? entry.meta.difficulty : null, count: entry.count || 0, score: entry.score || 0, date: entry.date };
       p[t].records.push(rec);
       p[t].bestScore = Math.max(p[t].bestScore||0, entry.score||0);
-      const requiredDiffs = [15,10,5];
+      const requiredDiffs = [5];
       const modes = ['input','mcq'];
       let mastered = true;
       for(const m of modes){
         for(const d of requiredDiffs){
-          // Perubahan: minimal 5 soal (count>=5) untuk setiap kombinasi mode/kesulitan
-          const ok = p[t].records.some(r => r.mode===m && r.difficulty==d && r.count>=5 && r.score>=90);
+          // Perubahan: minimal 10 soal (count>=5) untuk setiap kombinasi mode/kesulitan
+          const ok = p[t].records.some(r => r.mode===m && r.difficulty==d && r.count>=10 && r.score>=90);
           if(!ok) { mastered = false; break; }
         }
         if(!mastered) break;
@@ -660,3 +660,4 @@ document.addEventListener('DOMContentLoaded', ()=>{ loadIdentity(); renderMul();
 </script>
 </body>
 </html>
+
