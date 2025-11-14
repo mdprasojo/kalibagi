@@ -231,9 +231,9 @@ footer.app-footer{position:fixed;left:0;right:0;bottom:0;display:flex;justify-co
       <div style="display:flex;gap:8px;flex-direction:column;">
         <label class="small">Tipe Soal:</label>
         <div id="mulType" class="param-grid" data-param="type">
-          <button class="param-btn" data-value="1-5">Perkalian 1–5</button>
-          <button class="param-btn selected" data-value="1-10">Perkalian 1–10</button>
-          <button class="param-btn" data-value="acak">Acak 1–10</button>
+          <button class="param-btn selected" data-value="1-5">Perkalian 1–5</button>
+          <button class="param-btn" data-value="6-10">Perkalian 6–10</button>
+          <button class="param-btn" data-value="1-10">Perkalian 1–10</button>
         </div>
         
         <label class="small">Jumlah Soal:</label>
@@ -486,22 +486,24 @@ function startDrill(){
     startQuiz({list, perDefault:per, type:'Drill', drillMode:mode, detail:`Drill Perkalian ${table} (${labelDifficulty(per)})`, meta:{table:table, mode:mode, difficulty:per, count:count}});
 }
 
-// MODIFIKASI: Menggunakan getSelectedParam
+// MODIFIKASI: Menggunakan getSelectedParam dan menambahkan logika untuk '6-10'
 function startMulPractice(){
     const type=getSelectedParam('mulType');
     const count=parseInt(getSelectedParam('mulCount'),10);
     const per=parseInt(getSelectedParam('mulDiff'),10);
     
     let pool=[]; 
-    if(type==='1-5'){ for(let a=1;a<=10;a++) for(let b=1;b<=5;b++) pool.push({q:a+'×'+b,a:a*b,tExp:per, meta:{kind:'Latihan Perkalian',range:'1-5',mode:'input',difficulty:per,count:count}}); } 
-    else if(type==='1-10') { for(let a=1;a<=10;a++) for(let b=1;b<=10;b++) pool.push({q:a+'×'+b,a:a*b,tExp:per, meta:{kind:'Latihan Perkalian',range:'1-10',mode:'input',difficulty:per,count:count}}); }
-    else { // Acak
-        while(pool.length < count*2) { // Buat pool yang lebih besar untuk diacak
-            const a=Math.floor(Math.random()*10)+1; 
-            const b=Math.floor(Math.random()*10)+1;
-            pool.push({q:a+'×'+b,a:a*b,tExp:per, meta:{kind:'Latihan Perkalian',range:'Acak',mode:'input',difficulty:per,count:count}});
-        }
+    if(type==='1-5'){ // Perkalian 1-5 (1x1 s/d 10x5)
+        for(let a=1;a<=10;a++) for(let b=1;b<=5;b++) pool.push({q:a+'×'+b,a:a*b,tExp:per, meta:{kind:'Latihan Perkalian',range:'1-5',mode:'input',difficulty:per,count:count}}); 
+    } 
+    else if(type==='6-10'){ // LOGIKA BARU: Perkalian 6-10 (1x6 s/d 10x10)
+        for(let a=1;a<=10;a++) for(let b=6;b<=10;b++) pool.push({q:a+'×'+b,a:a*b,tExp:per, meta:{kind:'Latihan Perkalian',range:'6-10',mode:'input',difficulty:per,count:count}});
     }
+    else if(type==='1-10') { // Perkalian 1-10 (1x1 s/d 10x10)
+        for(let a=1;a<=10;a++) for(let b=1;b<=10;b++) pool.push({q:a+'×'+b,a:a*b,tExp:per, meta:{kind:'Latihan Perkalian',range:'1-10',mode:'input',difficulty:per,count:count}}); 
+    }
+    // Logika 'acak' telah dihapus karena tombolnya diganti
+    
 
     pool=shuffle(pool); 
     const list=pool.slice(0,count);
@@ -677,8 +679,8 @@ function updateProgressDataFromEntry(entry){
 }
 function parseTablesFromDetail(detail){
   const res=[]; if(!detail) return res;
-  const mRange = detail.match(/Perkalian\s*([0-9]+)\s*–\s*([0-9]+)/i); // Handle '–' (en dash)
-  if(mRange){ const from=parseInt(mRange[1],10), to=parseInt(mRange[2],10); for(let i=from;i<=to;i++) res.push(i); return res; }
+  const mRange = detail.match(/Perkalian\s*([0-9]+)\s*[–-]\s*([0-9]+)/i); // Handle '–' (en dash) and '-' (hyphen)
+  if(mRange){ const from=parseInt(mRange[1]), to=parseInt(mRange[2]); for(let i=from;i<=to;i++) res.push(i); return res; }
   const mSingle = detail.match(/Perkalian\s*([0-9]+)/i);
   if(mSingle){ res.push(parseInt(mSingle[1],10)); return res; }
   const m1to5 = detail.match(/1–5/); if(m1to5){ for(let i=1;i<=5;i++) res.push(i); return res; }
