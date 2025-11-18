@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
-<title>Belajar Perkalian & Pembagian — v4.10.4</title>
+<title>Belajar Perkalian & Pembagian — v5.0</title>
 <style>
 :root{--bg:#f7f9fc;--panel:#fff;--primary:#0b76c2;--accent:#0ea5a3;--muted:#6b7280;--card-radius:12px;--nav-height:64px;--grid-size:110px}
 *{box-sizing:border-box;font-family:Inter,system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif}
@@ -38,7 +38,22 @@ header{background:linear-gradient(90deg,var(--primary),var(--accent));color:whit
 .mcq-btn{padding:14px;border-radius:12px;border:1px solid #e6eef6;background:#fff;font-weight:800;cursor:pointer;font-size:1.05rem}
 .table-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch}
 .progress-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;justify-items:center}
-.prog-box{width:var(--grid-size);height:var(--grid-size);border-radius:10px;display:flex;flex-direction:column;align-items:center;justify-content:center;font-weight:800;font-size:1.05rem;cursor:pointer;border:2px solid rgba(0,0,0,0.06);padding:6px;text-align:center}
+/* PERUBAHAN REVISI FINAL: prog-box diubah menjadi persegi panjang */
+.prog-box{
+  min-width: 90px;
+  min-height: 80px;
+  border-radius:10px;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  font-weight:800;
+  font-size:1.05rem;
+  cursor:pointer;
+  border:2px solid rgba(0,0,0,0.06);
+  padding:8px 6px; /* Tambahkan padding agar lebih lapang */
+  text-align:center
+}
 .prog-box .label{font-size:0.9rem}
 .prog-box .icon{font-size:1.4rem;margin-top:6px}
 .prog-box.red{background:#fff6f6;border-color:#fca5a5;color:#991b1b}
@@ -61,13 +76,13 @@ footer.app-footer{position:fixed;left:0;right:0;bottom:0;display:flex;justify-co
   gap: 8px;
   flex-wrap: wrap; 
   margin-top: 4px;
-  margin-bottom: 8px; /* Added spacing */
+  margin-bottom: 8px;
 }
 .param-btn {
   padding: 8px 12px;
   border-radius: 10px;
   border: 1px solid #e6eef6;
-  background: #f3f4f6; /* slightly dark background */
+  background: #f3f4f6;
   font-weight: 700;
   cursor: pointer;
   font-size: 0.9rem;
@@ -82,7 +97,8 @@ footer.app-footer{position:fixed;left:0;right:0;bottom:0;display:flex;justify-co
 /* --------------------------------- */
 
 @media (max-width:420px){
-  .prog-box{width:94px;height:94px;font-size:0.95rem}
+  /* PERUBAHAN REVISI FINAL: Sesuaikan ukuran prog-box yang lebih kecil untuk mobile */
+  .prog-box{min-width:80px;min-height:70px;font-size:0.95rem;padding:6px 4px}
   .prog-box .icon{font-size:1.1rem}
   .nav button span{font-size:11px}
   .question{font-size:1.4rem}
@@ -97,7 +113,7 @@ footer.app-footer{position:fixed;left:0;right:0;bottom:0;display:flex;justify-co
       <button id="headerBack" onclick="headerBack()" title="Kembali"><span class="ico">←</span> <span id="headerBackText"></span></button>
       <div>
         <div class="header-title">Belajar Perkalian & Pembagian</div>
-        <div style="font-size:11px;opacity:0.95">oleh MD.Prasojo — SMPN 05 Lumajang (v4.10.4)</div>
+        <div style="font-size:11px;opacity:0.95">oleh MD.Prasojo — SMPN 05 Lumajang (v5.0)</div>
       </div>
     </div>
     <div>
@@ -230,6 +246,11 @@ footer.app-footer{position:fixed;left:0;right:0;bottom:0;display:flex;justify-co
       <div class="small">Dinyatakan menguasai (hijau) jika telah menyelesaikan latihan Drill <strong>Kesulitan Sukar (5 s)</strong> untuk semua mode <b>isian dan PG</b> dengan jumlah soal <b>10 atau 15</b>. Klik kotak untuk melihat riwayat.</div>
       <div style="height:8px"></div>
       <div id="progressGrid" class="progress-grid"></div>
+      <div style="height:8px"></div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
+        <button class="btn" onclick="sendProgress()">Kirim Progres ke Guru via WhatsApp</button>
+        <button class="btn outline" onclick="copyProgress()">Salin Pesan Progres</button>
+      </div>
     </div>
 
     <div id="latihan_mul" class="card" style="display:none">
@@ -256,6 +277,13 @@ footer.app-footer{position:fixed;left:0;right:0;bottom:0;display:flex;justify-co
           <button class="param-btn" data-value="15">Mudah (15 s)</button>
           <button class="param-btn selected" data-value="10">Sedang (10 s)</button>
           <button class="param-btn" data-value="5">Sukar (5 s)</button>
+        </div>
+        
+        <label class="small">Mode Jawaban:</label>
+        <div id="mulMode" class="param-grid" data-param="mode">
+          <button class="param-btn selected" data-value="mcq">Pilihan Ganda</button>
+          <button class="param-btn" data-value="input">Isian</button>
+
         </div>
       </div>
       <div style="height:8px"></div>
@@ -286,6 +314,12 @@ footer.app-footer{position:fixed;left:0;right:0;bottom:0;display:flex;justify-co
           <button class="param-btn selected" data-value="1-10">1–10</button>
           <button class="param-btn" data-value="1-20">1–20</button>
         </div>
+        
+        <label class="small">Mode Jawaban:</label>
+        <div id="divMode" class="param-grid" data-param="mode">
+          <button class="param-btn selected" data-value="mcq">Pilihan Ganda</button>
+          <button class="param-btn" data-value="input">Isian</button>
+        </div>
       </div>
       <div style="height:8px"></div>
       <div style="display:flex;gap:8px"><button class="btn" onclick="startDivPractice()">Mulai Pembagian</button><button class="btn outline" onclick="goBack()">Kembali</button></div>
@@ -314,7 +348,7 @@ footer.app-footer{position:fixed;left:0;right:0;bottom:0;display:flex;justify-co
 
       </div>
       <div style="display:flex;gap:8px;justify-content:flex-start; margin-top: 10px;">
-        <button class="btn outline" onclick="endQuizEarly()">Selesaikan Lebih Awal</button>
+        <button class="btn outline" onclick="endQuizEarly()">Seleselesaikan Lebih Awal</button>
       </div>
     </div>
 
@@ -347,6 +381,8 @@ footer.app-footer{position:fixed;left:0;right:0;bottom:0;display:flex;justify-co
 
     <div id="riwayat" class="card" style="display:none">
       <strong>Riwayat Latihan</strong>
+      <div style="height:8px"></div>
+      <div class="small">Identitas: <span id="histIdent">-</span></div>
       <div style="height:8px"></div>
       <div style="display:flex;gap:8px;flex-wrap:wrap">
         <button class="btn" onclick="sendAllHistory()">Kirim Semua ke Guru</button>
@@ -400,7 +436,13 @@ function updateHeaderBackVisibility(){ const btn=document.getElementById('header
 
 /* Identity */
 function loadIdentityObj(){ const raw=localStorage.getItem(LS_KEY_ID); return raw?JSON.parse(raw):{name:'',cls:'',abs:''}; }
-function loadIdentity(){ const raw=localStorage.getItem(LS_KEY_ID); if(raw){ try{ const o=JSON.parse(raw); document.getElementById('inputName').value=o.name||''; document.getElementById('inputClass').value=o.cls||''; document.getElementById('inputAbsen').value=o.abs||''; updateIdentityDisplay(o.name,o.cls,o.abs); document.getElementById('miniIdent').innerText=(o.name||'-')+' | '+(o.cls||'-')+' | '+(o.abs||'-'); document.getElementById('progIdent').innerText=(o.name||'-')+' | '+(o.cls||'-')+' | Absen: '+(o.abs||'-'); }catch(e){} } else { updateIdentityDisplay('-','-','-'); document.getElementById('miniIdent').innerText='- | - | -'; document.getElementById('progIdent').innerText='-'; } }
+function loadIdentity(){ const raw=localStorage.getItem(LS_KEY_ID); if(raw){ try{ const o=JSON.parse(raw); document.getElementById('inputName').value=o.name||''; document.getElementById('inputClass').value=o.cls||''; document.getElementById('inputAbsen').value=o.abs||''; updateIdentityDisplay(o.name,o.cls,o.abs); document.getElementById('miniIdent').innerText=(o.name||'-')+' | '+(o.cls||'-')+' | '+(o.abs||'-'); document.getElementById('progIdent').innerText=(o.name||'-')+' | '+(o.cls||'-')+' | Absen: '+(o.abs||'-'); 
+  // PERUBAHAN REVISI FINAL: Tambahkan update histIdent
+  document.getElementById('histIdent').innerText=(o.name||'-')+' | '+(o.cls||'-')+' | Absen: '+(o.abs||'-');
+}catch(e){} } else { updateIdentityDisplay('-','-','-'); document.getElementById('miniIdent').innerText='- | - | -'; document.getElementById('progIdent').innerText='-'; 
+  // PERUBAHAN REVISI FINAL: Tambahkan update histIdent
+  document.getElementById('histIdent').innerText='-';
+} }
 function saveIdentityFromInputs(){
   const n=document.getElementById('inputName').value.trim();
   const c=document.getElementById('inputClass').value.trim();
@@ -428,6 +470,8 @@ function saveIdentityFromInputs(){
   updateIdentityDisplay(n,c,a);
   document.getElementById('miniIdent').innerText=(n||'-')+' | '+(c||'-')+' | '+(a||'-');
   document.getElementById('progIdent').innerText=(n||'-')+' | '+(c||'-')+' | Absen: '+(a||'-');
+  // PERUBAHAN REVISI FINAL: Tambahkan update histIdent
+  document.getElementById('histIdent').innerText=(n||'-')+' | '+(c||'-')+' | Absen: '+(a||'-');
   return true;
 }
 function saveIdentity(){
@@ -445,6 +489,8 @@ function clearIdentity(){
   updateIdentityDisplay('-','-','-');
   document.getElementById('miniIdent').innerText='- | - | -';
   document.getElementById('progIdent').innerText='-';
+  // PERUBAHAN REVISI FINAL: Tambahkan update histIdent
+  document.getElementById('histIdent').innerText='-';
   renderHistory();
   renderProgressGrid();
   alert('Identitas, Riwayat, dan Progres Belajar dihapus.');
@@ -494,37 +540,37 @@ function startDrill(){
     startQuiz({list, perDefault:per, type:'Drill', drillMode:mode, detail:`Drill Perkalian ${table} (${labelDifficulty(per)})`, meta:{table:table, mode:mode, difficulty:per, count:count}});
 }
 
-// MODIFIKASI: Menggunakan getSelectedParam dan menambahkan logika untuk '6-10'
+// Revisi 2: Tambahkan mode ke startMulPractice
 function startMulPractice(){
     const type=getSelectedParam('mulType');
     const count=parseInt(getSelectedParam('mulCount'),10);
     const per=parseInt(getSelectedParam('mulDiff'),10);
+    const mode=getSelectedParam('mulMode'); // <<< BARU: Ambil Mode
     
     let pool=[]; 
     if(type==='1-5'){ // Perkalian 1-5 (1x1 s/d 10x5)
-        for(let a=1;a<=10;a++) for(let b=1;b<=5;b++) pool.push({q:a+'×'+b,a:a*b,tExp:per, meta:{kind:'Latihan Perkalian',range:'1-5',mode:'input',difficulty:per,count:count}}); 
+        for(let a=1;a<=10;a++) for(let b=1;b<=5;b++) pool.push({q:a+'×'+b,a:a*b,tExp:per, meta:{kind:'Latihan Perkalian',range:'1-5',mode:mode,difficulty:per,count:count}}); 
     } 
-    else if(type==='6-10'){ // LOGIKA BARU: Perkalian 6-10 (1x6 s/d 10x10)
-        for(let a=1;a<=10;a++) for(let b=6;b<=10;b++) pool.push({q:a+'×'+b,a:a*b,tExp:per, meta:{kind:'Latihan Perkalian',range:'6-10',mode:'input',difficulty:per,count:count}});
+    else if(type==='6-10'){ // Perkalian 6-10 (1x6 s/d 10x10)
+        for(let a=1;a<=10;a++) for(let b=6;b<=10;b++) pool.push({q:a+'×'+b,a:a*b,tExp:per, meta:{kind:'Latihan Perkalian',range:'6-10',mode:mode,difficulty:per,count:count}});
     }
     else if(type==='1-10') { // Perkalian 1-10 (1x1 s/d 10x10)
-        for(let a=1;a<=10;a++) for(let b=1;b<=10;b++) pool.push({q:a+'×'+b,a:a*b,tExp:per, meta:{kind:'Latihan Perkalian',range:'1-10',mode:'input',difficulty:per,count:count}}); 
+        for(let a=1;a<=10;a++) for(let b=1;b<=10;b++) pool.push({q:a+'×'+b,a:a*b,tExp:per, meta:{kind:'Latihan Perkalian',range:'1-10',mode:mode,difficulty:per,count:count}}); 
     }
-    // Logika 'acak' telah dihapus karena tombolnya diganti
     
-
     pool=shuffle(pool); 
     const list=pool.slice(0,count);
     quizCallbackReplay=()=>startMulPractice();
     returnPanelAfterQuiz='latihan_mul'; // Set return panel for Latihan Perkalian
-    startQuiz({list, perDefault:per, type:'Latihan Perkalian', drillMode:'input', detail:`Perkalian ${type} (${labelDifficulty(per)})`, meta:{range:type, mode:'input', difficulty:per, count:count}});
+    startQuiz({list, perDefault:per, type:'Latihan Perkalian', drillMode:mode, detail:`Perkalian ${type} (${labelDifficulty(per)})`, meta:{range:type, mode:mode, difficulty:per, count:count}});
 }
 
-// MODIFIKASI: Menggunakan getSelectedParam
+// Revisi 2: Tambahkan mode ke startDivPractice
 function startDivPractice(){
     const count=parseInt(getSelectedParam('divCount'),10);
     const per=parseInt(getSelectedParam('divDiff'),10);
     const range=getSelectedParam('divRange');
+    const mode=getSelectedParam('divMode'); // <<< BARU: Ambil Mode
     
     let maxDiv = range==='1-10'?10:20; 
     let list=[];
@@ -532,11 +578,11 @@ function startDivPractice(){
         const divisor=Math.floor(Math.random()*maxDiv)+1; 
         const quotient=Math.floor(Math.random()*10)+1; 
         const dividend=divisor*quotient; 
-        if(dividend<=100) list.push({q:dividend+' ÷ '+divisor,a:quotient,tExp:per, meta:{kind:'Latihan Pembagian',range:range,mode:'input',difficulty:per,count:count}}); 
+        if(dividend<=100) list.push({q:dividend+' ÷ '+divisor,a:quotient,tExp:per, meta:{kind:'Latihan Pembagian',range:range,mode:mode,difficulty:per,count:count}}); // <<< BARU: Simpan Mode
     }
     quizCallbackReplay=()=>startDivPractice();
     returnPanelAfterQuiz='latihan_div'; // Set return panel for Latihan Pembagian
-    startQuiz({list, perDefault:per, type:'Latihan Pembagian', drillMode:'input', detail:`Pembagian ${range} (${labelDifficulty(per)})`, meta:{range:range, mode:'input', difficulty:per, count:count}});
+    startQuiz({list, perDefault:per, type:'Latihan Pembagian', drillMode:mode, detail:`Pembagian ${range} (${labelDifficulty(per)})`, meta:{range:range, mode:mode, difficulty:per, count:count}});
 }
 function startQuiz(opts){ if(quizState && quizState.timerId) clearInterval(quizState.timerId); quizState={ list:opts.list.slice(), index:0, answers:[], startTime:Date.now(), totalTimeUsed:0, perDefault:opts.perDefault||10, timerId:null, timeLeft:0, timePerQ:opts.perDefault||10, type:opts.type||'Latihan', drillMode:opts.drillMode||'input', detail:opts.detail||'', meta:opts.meta||{} }; document.getElementById('qTotal').innerText = quizState.list.length; document.getElementById('qIndex').innerText = 1; showPanel('quizView'); showQuestion(); enableKeyboardForQuiz(true); }
 function showQuestion(){ const s=quizState; if(!s) return; if(s.index>=s.list.length){ finishQuiz(); return; } const item=s.list[s.index]; document.getElementById('questionText').innerText = item.q + ' = ?'; document.getElementById('infoText').innerText=''; document.getElementById('answerDisplay').innerText='-'; document.getElementById('qIndex').innerText = s.index+1; s.timePerQ = item.tExp || s.perDefault;
@@ -607,14 +653,55 @@ function loadHistory(){ const raw=localStorage.getItem(LS_KEY_HISTORY); return r
 function saveHistory(hist){ localStorage.setItem(LS_KEY_HISTORY, JSON.stringify(hist)); }
 function addHistoryEntry(entry){ const hist = loadHistory(); hist.unshift(entry); saveHistory(hist); renderHistory(); }
 function clearAllHistory(){ if(!confirm('Hapus SEMUA riwayat latihan? Tindakan ini tidak dapat dibatalkan. Riwayat dan Progres Belajar akan hilang.')) return; localStorage.removeItem(LS_KEY_HISTORY); localStorage.removeItem(LS_KEY_PROGRESS); renderHistory(); renderProgressGrid(); alert('Semua riwayat dan progres berhasil dihapus.'); }
-function renderHistory(){ const hist = loadHistory(); const container=document.getElementById('historyList'); container.innerHTML=''; if(hist.length===0){ container.innerHTML='<div class="small">Belum ada riwayat latihan.</div>'; return; }
-  const table=document.createElement('table'); table.className='hist'; table.style.width='100%'; table.style.borderCollapse='collapse'; const thead=document.createElement('thead'); thead.innerHTML='<tr><th>No</th><th>Tanggal</th><th>Nama</th><th>Kelas</th><th>No.Absen</th><th>Jenis</th><th>Detail</th><th>Skor</th><th>Benar</th><th>Waktu</th><th>Aksi</th></tr>'; table.appendChild(thead);
+
+// PERUBAHAN REVISI FINAL: Menghapus kolom Nama, Kelas, No. Absen dari tabel
+function renderHistory(){ 
+  const hist = loadHistory(); 
+  const container=document.getElementById('historyList'); 
+  container.innerHTML=''; 
+  if(hist.length===0){ container.innerHTML='<div class="small">Belum ada riwayat latihan.</div>'; return; }
+  
+  const table=document.createElement('table'); 
+  table.className='hist'; 
+  table.style.width='100%'; 
+  table.style.borderCollapse='collapse'; 
+  
+  const thead=document.createElement('thead'); 
+  // PERUBAHAN: Hanya menyisakan kolom yang relevan (tanpa identitas siswa)
+  thead.innerHTML='<tr><th>No</th><th>Tanggal</th><th>Jenis</th><th>Detail</th><th>Mode</th><th>Skor</th><th>Benar</th><th>Waktu</th><th>Aksi</th></tr>'; 
+  table.appendChild(thead);
+  
   const tbody=document.createElement('tbody');
-  hist.forEach((h,idx)=>{ const tr=document.createElement('tr'); const date=new Date(h.date).toLocaleString(); tr.innerHTML=`<td style="text-align:center">${idx+1}</td><td>${date}</td><td>${escapeHtml(h.idName)}</td><td>${escapeHtml(h.idClass)}</td><td style="text-align:center">${escapeHtml(h.idAbsen)}</td><td>${h.type}</td><td>${h.detail||'-'}</td><td style="text-align:center">${h.score}%</td><td style="text-align:center">${h.correct}</td><td>${formatSecondsFull(h.timeSecs)}</td><td></td>`; const cell=tr.querySelector('td:last-child'); const sendBtn=document.createElement('button'); sendBtn.className='btn outline'; sendBtn.style.marginRight='6px'; sendBtn.innerText='Kirim'; sendBtn.onclick=()=>{ previewAndSendHistoryEntry(h); }; const copyBtn=document.createElement('button'); copyBtn.className='btn outline'; copyBtn.innerText='Salin'; copyBtn.onclick=()=>{ navigator.clipboard.writeText(makeMessageFromEntry(h)).then(()=> alert('Pesan disalin.')); }; cell.appendChild(sendBtn); cell.appendChild(copyBtn); tbody.appendChild(tr); });
-  table.appendChild(tbody); container.appendChild(table); }
+  hist.forEach((h,idx)=>{ 
+    const modeLabel = h.meta && h.meta.mode ? (h.meta.mode === 'mcq' ? 'PG' : 'Isian') : '-'; 
+    const tr=document.createElement('tr'); 
+    const date=new Date(h.date).toLocaleString(); 
+    // PERUBAHAN: Menghilangkan h.idName, h.idClass, h.idAbsen dari <td>
+    tr.innerHTML=`<td style="text-align:center">${idx+1}</td><td>${date}</td><td>${h.type}</td><td>${h.detail||'-'}</td><td style="text-align:center">${modeLabel}</td><td style="text-align:center">${h.score}%</td><td style="text-align:center">${h.correct}</td><td>${formatSecondsFull(h.timeSecs)}</td><td></td>`; 
+    const cell=tr.querySelector('td:last-child'); 
+    const sendBtn=document.createElement('button'); 
+    sendBtn.className='btn outline'; 
+    sendBtn.style.marginRight='6px'; 
+    sendBtn.innerText='Kirim'; 
+    sendBtn.onclick=()=>{ previewAndSendHistoryEntry(h); }; 
+    const copyBtn=document.createElement('button'); 
+    copyBtn.className='btn outline'; 
+    copyBtn.innerText='Salin'; 
+    copyBtn.onclick=()=>{ navigator.clipboard.writeText(makeMessageFromEntry(h)).then(()=> alert('Pesan disalin.')); }; 
+    cell.appendChild(sendBtn); 
+    cell.appendChild(copyBtn); 
+    tbody.appendChild(tr); 
+  });
+  table.appendChild(tbody); 
+  container.appendChild(table); 
+}
 
 /* send/copy all history */
-function makeMessageFromEntry(h){ return `Hasil Latihan:\nNama: ${h.idName||'-'}\nKelas: ${h.idClass||'-'}\nNo. Absen: ${h.idAbsen||'-'}\nJenis: ${h.type}\nDetail: ${h.detail||'-'}\nSkor: ${h.score}%\nBenar: ${h.correct} | Salah: ${h.wrong}\nWaktu: ${formatSecondsFull(h.timeSecs)}\nTanggal: ${new Date(h.date).toLocaleString()}`; }
+// Revisi 1: Tambahkan mode pada pesan yang dikirim/disalin
+function makeMessageFromEntry(h){ 
+    const modeLabel = h.meta && h.meta.mode ? (h.meta.mode === 'mcq' ? 'Pilihan Ganda' : 'Isian') : '-';
+    return `Hasil Latihan:\nNama: ${h.idName||'-'}\nKelas: ${h.idClass||'-'}\nNo. Absen: ${h.idAbsen||'-'}\nJenis: ${h.type}\nDetail: ${h.detail||'-'}\nMode: ${modeLabel}\nSkor: ${h.score}%\nBenar: ${h.correct} | Salah: ${h.wrong}\nWaktu: ${formatSecondsFull(h.timeSecs)}\nTanggal: ${new Date(h.date).toLocaleString()}`; 
+}
 function previewAndSendHistoryEntry(entry){ const saved=localStorage.getItem(LS_KEY_TEACHER); if(!saved){ if(confirm('Nomor guru belum disimpan. Mau salin pesan untuk dikirim manual?')){ navigator.clipboard.writeText(makeMessageFromEntry(entry)).then(()=> alert('Pesan disalin.')); } return; } const url='https://wa.me/'+saved+'?text='+encodeURIComponent(makeMessageFromEntry(entry)); window.open(url,'_blank'); }
 function sendAllHistory(){
   const hist=loadHistory();
@@ -695,6 +782,63 @@ function parseTablesFromDetail(detail){
   const m1to10 = detail.match(/1–10/); if(m1to10){ for(let i=1;i<=10;i++) res.push(i); return res; }
   return res;
 }
+
+// Revisi 3: Fungsi untuk Kirim Progres
+function sendProgress(){
+  const p = loadProgress();
+  const id = loadIdentityObj();
+  const saved = localStorage.getItem(LS_KEY_TEACHER);
+
+  if (!saved) {
+    if (confirm('Nomor guru belum disimpan. Mau salin pesan progres untuk dikirim manual?')) {
+      copyProgress();
+    }
+    return;
+  }
+  
+  const msg = makeProgressMessage(p, id);
+  const url = 'https://wa.me/' + saved + '?text=' + encodeURIComponent(msg);
+  window.open(url, '_blank');
+}
+
+// Revisi 3: Fungsi untuk Salin Progres
+function copyProgress(){
+  const p = loadProgress();
+  const id = loadIdentityObj();
+  const msg = makeProgressMessage(p, id);
+  navigator.clipboard.writeText(msg).then(() => alert('Pesan progres disalin.'));
+}
+
+// Revisi 3: Fungsi Helper untuk membuat pesan Progres (Format WA)
+function makeProgressMessage(progressData, identity){
+  let msg = `*LAPORAN PROGRES BELAJAR PERKALIAN*\n`;
+  msg += `Nama: ${identity.name || '-'}\n`;
+  msg += `Kelas: ${identity.cls || '-'}\n`;
+  msg += `No. Absen: ${identity.abs || '-'}\n`;
+  msg += `Tanggal Laporan: ${new Date().toLocaleDateString('id-ID')}\n\n`;
+  msg += `*REKAP PROGRES PERKALIAN (1 - 10):*\n`;
+
+  for(let i=1; i<=10; i++){
+    const prog = progressData[i];
+    let status = '❌ Belum Dikerjakan';
+    let detail = '';
+    
+    if(prog && prog.records && prog.records.length > 0){
+        if(prog.mastered){
+            status = '✅ HAFAL (LULUS)';
+        } else {
+            status = '⚠️ Belum Hafal';
+        }
+        detail = `(Skor terbaik: ${prog.bestScore}%)`;
+    }
+    msg += `• Perkalian ${String(i).padStart(2,' ')}: ${status} ${detail}\n`;
+  }
+  
+  msg += '\n*Keterangan:* \n✅ Hafal (LULUS): Sudah LULUS drill (5s, skor min 90%) mode isian & PG.\n⚠️ Belum Hafal: Sudah pernah mengerjakan namun belum LULUS drill.\n❌ Belum Dikerjakan: Belum ada riwayat latihan drill.';
+  
+  return msg;
+}
+
 function renderProgressGrid(){ const container=document.getElementById('progressGrid'); container.innerHTML=''; const p = loadProgress();
   for(let i=1;i<=10;i++){
     const box=document.createElement('div'); box.className='prog-box';
@@ -729,7 +873,9 @@ function extractMetaSummary(quizStateObj){
 }
 
 /* share preview */
-function prepareSharePreview(){ const id=loadIdentityObj(); const total=quizState.list.length; const correct=quizState.answers.filter(a=>a.correct).length; const wrong=total-correct; const timeStr=formatSecondsFull(quizState.totalTimeUsed); const type=quizState.type||''; const text = `Hasil Latihan:\nNama: ${id.name||'-'}\nKelas: ${id.cls||'-'}\nNo. Absen: ${id.abs||'-'}\nJenis: ${type}\nDetail: ${quizState.detail||'-'}\nSkor: ${Math.round((correct/total)*100)}%\nBenar: ${correct} | Salah: ${wrong}\nWaktu: ${timeStr}`; document.getElementById('sharePreview').innerText = text; document.getElementById('shareWhats').dataset.msg = encodeURIComponent(text); }
+function prepareSharePreview(){ const id=loadIdentityObj(); const total=quizState.list.length; const correct=quizState.answers.filter(a=>a.correct).length; const wrong=total-correct; const timeStr=formatSecondsFull(quizState.totalTimeUsed); const type=quizState.type||''; 
+const modeLabel = quizState.meta && quizState.meta.mode ? (quizState.meta.mode === 'mcq' ? 'Pilihan Ganda' : 'Isian') : '-';
+const text = `Hasil Latihan:\nNama: ${id.name||'-'}\nKelas: ${id.cls||'-'}\nNo. Absen: ${id.abs||'-'}\nJenis: ${type}\nDetail: ${quizState.detail||'-'}\nMode: ${modeLabel}\nSkor: ${Math.round((correct/total)*100)}%\nBenar: ${correct} | Salah: ${wrong}\nWaktu: ${timeStr}`; document.getElementById('sharePreview').innerText = text; document.getElementById('shareWhats').dataset.msg = encodeURIComponent(text); }
 
 /* keyboard support for desktop — versi perbaikan Enter/NumpadEnter */
 let keyboardEnabled = false;
@@ -818,5 +964,3 @@ document.addEventListener('DOMContentLoaded', ()=>{
 </script>
 </body>
 </html>
-
-
