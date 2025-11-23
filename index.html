@@ -158,6 +158,31 @@ footer.app-footer{position:fixed;left:0;right:0;bottom:0;display:flex;justify-co
       </div>
       <div style="height:8px"></div>
       <div class="small">Nama: <span id="showName">-</span> | Kelas: <span id="showClass">-</span> | Absen: <span id="showAbsen">-</span></div>
+      <div style="height:8px"></div>
+      <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+        <label class="small">Nomor Guru (WA):
+          <input id="teacherNumber" placeholder="62..." style="padding:6px;border-radius:8px;border:1px solid #ddd;margin-left:6px" />
+        </label>
+        <button class="btn" onclick="saveTeacher()">Simpan Nomor</button>
+        <div class="small" id="teacherSaved" style="margin-left:8px"></div>
+      </div>
+    
+     <div style="height:10px"></div>
+      <div style="display:flex;justify-content:space-between;align-items:center">
+        <strong>Menu Utama</strong>
+        </div>
+      <div style="height:8px"></div>
+      <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:10px">
+        <div class="card" onclick="navigate('cover')" style="cursor:pointer"><strong>Home / Identitas</strong><div class="small">Nama, Kelas, No. Absen</div></div>
+        <div class="card" onclick="navigate('konsep')" style="cursor:pointer"><strong>Konsep</strong><div class="small">Perkalian & Pembagian</div></div>
+        <div class="card" onclick="navigate('daftar')" style="cursor:pointer"><strong>Daftar Perkalian</strong><div class="small">1–10, 1–5, 6–10</div></div>
+        <div class="card" onclick="navigate('drill')" style="cursor:pointer"><strong>Latihan Drill</strong><div class="small">Per-tabel — Isian / MCQ</div></div>
+        <div class="card" onclick="navigate('progress')" style="cursor:pointer"><strong>Progres Belajar</strong><div class="small">Perkalian 1–10</div></div>
+        <div class="card" onclick="navigate('latihan_mul')" style="cursor:pointer"><strong>Latihan Perkalian</strong><div class="small">Kelompok / Acak</div></div>
+        <div class="card" onclick="navigate('latihan_div')" style="cursor:pointer"><strong>Latihan Pembagian</strong><div class="small">Pembagian bilangan asli</div></div>
+        <div class="card" onclick="navigate('riwayat')" style="cursor:pointer"><strong>Riwayat & Bagikan</strong><div class="small">Hasil & WA Guru</div></div>
+<div style="height:40px"></div>
+    </div>
     </div>
 
     <div id="konsep" class="card" style="display:none">
@@ -388,14 +413,6 @@ footer.app-footer{position:fixed;left:0;right:0;bottom:0;display:flex;justify-co
         <button class="btn" onclick="sendAllHistory()">Kirim Semua ke Guru</button>
         <button class="btn outline" onclick="copyAllHistory()">Salin Semua Riwayat</button>
         <button class="btn outline" onclick="clearAllHistory()">Hapus Semua Riwayat</button>
-      </div>
-      <div style="height:8px"></div>
-      <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
-        <label class="small">Nomor Guru (WA):
-          <input id="teacherNumber" placeholder="62..." style="padding:6px;border-radius:8px;border:1px solid #ddd;margin-left:6px" />
-        </label>
-        <button class="btn" onclick="saveTeacher()">Simpan Nomor</button>
-        <div class="small" id="teacherSaved" style="margin-left:8px"></div>
       </div>
       <div style="height:8px"></div>
       <div class="table-scroll"><div id="historyList"></div></div>
@@ -964,4 +981,3 @@ document.addEventListener('DOMContentLoaded', ()=>{
 </script>
 </body>
 </html>
-
