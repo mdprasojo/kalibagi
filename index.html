@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
-<title>Belajar Perkalian & Pembagian — v5.3</title>
+<title>Belajar Perkalian & Pembagian — v5.5</title>
 <style>
 :root{--bg:#f7f9fc;--panel:#fff;--primary:#0b76c2;--accent:#0ea5a3;--muted:#6b7280;--card-radius:12px;--nav-height:64px;--grid-size:110px}
 *{box-sizing:border-box;font-family:Inter,system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif}
@@ -96,6 +96,37 @@ footer.app-footer{position:fixed;left:0;right:0;bottom:0;display:flex;justify-co
 }
 /* --------------------------------- */
 
+/* --- RIWAYAT TABLE STYLES (REVISI) --- */
+.hist th, .hist td {
+    padding: 8px 6px;
+    border: 1px solid #e6eef6; /* Border tipis */
+    text-align: center;
+    font-size: 0.85rem;
+}
+.hist thead th {
+    background-color: #e6f0f8; /* Header biru muda */
+    font-weight: 700;
+    color: #0b76c2;
+    white-space: nowrap; /* Mencegah judul kolom terlalu pendek */
+}
+.hist tbody tr:nth-child(even) {
+    background-color: #fcfdfe; /* Baris genap sedikit berbeda */
+}
+/* Penyesuaian warna baris berdasarkan skor */
+.hist .score-100 { background-color: #ecfdf5; } /* Hijau Muda untuk 100% */
+.hist .score-60 { background-color: #fff0f0; } /* Merah Muda untuk <60% */
+
+/* Penyesuaian lebar kolom untuk 7 kolom (termasuk MODE) */
+.hist th:nth-child(1), .hist td:nth-child(1) { width: 5%; } /* No */
+.hist th:nth-child(2), .hist td:nth-child(2) { width: 12%; } /* Tanggal */
+.hist th:nth-child(3), .hist td:nth-child(3) { text-align: left; width: 20%; } /* Jenis Latihan */
+.hist th:nth-child(4), .hist td:nth-child(4) { text-align: left; width: 28%; } /* Detail */
+.hist th:nth-child(5), .hist td:nth-child(5) { width: 10%; } /* Mode (BARU) */
+.hist th:nth-child(6), .hist td:nth-child(6) { width: 10%; } /* Skor */
+.hist th:nth-child(7), .hist td:nth-child(7) { width: 15%; } /* Waktu */
+/* --------------------------------- */
+
+
 @media (max-width:420px){
   /* PERUBAHAN REVISI FINAL: Sesuaikan ukuran prog-box yang lebih kecil untuk mobile */
   .prog-box{min-width:80px;min-height:70px;font-size:0.95rem;padding:6px 4px}
@@ -113,7 +144,7 @@ footer.app-footer{position:fixed;left:0;right:0;bottom:0;display:flex;justify-co
       <button id="headerBack" onclick="headerBack()" title="Kembali"><span class="ico">←</span> <span id="headerBackText"></span></button>
       <div>
         <div class="header-title">Belajar Perkalian & Pembagian</div>
-        <div style="font-size:11px;opacity:0.95">oleh MD. Prasojo — SMPN 05 Lumajang (v5.3)</div>
+        <div style="font-size:11px;opacity:0.95">oleh MD.Prasojo — SMPN 05 Lumajang (v5.5)</div>
       </div>
     </div>
     <div>
@@ -142,9 +173,11 @@ footer.app-footer{position:fixed;left:0;right:0;bottom:0;display:flex;justify-co
 
     <div id="cover" class="card" style="display:none">
       <h2>Selamat Datang</h2>
-      <div class="small">Isi identitas siswa. Data tersimpan otomatis di perangkat dan akan muncul lagi saat aplikasi dibuka.</div>
-      <div style="height:8px"></div>
       <div class="small">Isilah dengan nama lengkap, jangan diganti dengan nama yang lain agar progress belajar dan riwayat tidak terhapus.</div>
+      <div class="small">Data tersimpan otomatis di perangkat dan akan muncul lagi saat aplikasi dibuka.</div>
+      <div class="small">Buat shortcut, pada chrome, klik titik tiga, kemudian pilih add to home screen atau tambahkan pada layar.</div>
+      <div style="height:8px"></div>
+     
       <div style="height:8px"></div>
       <div style="display:flex;gap:8px;flex-wrap:wrap">
         <input id="inputName" placeholder="Nama siswa" style="flex:1;padding:8px;border-radius:8px;border:1px solid #ddd" />
@@ -160,13 +193,12 @@ footer.app-footer{position:fixed;left:0;right:0;bottom:0;display:flex;justify-co
       <div class="small">Nama: <span id="showName">-</span> | Kelas: <span id="showClass">-</span> | Absen: <span id="showAbsen">-</span></div>
       <div style="height:8px"></div>
       <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
-      <div class="small">Masukkan nomer whatsapp guru agar dapat mengirim langsung melalui whatsapp.</div>
         <label class="small">Nomor Guru (WA):
           <input id="teacherNumber" placeholder="62..." style="padding:6px;border-radius:8px;border:1px solid #ddd;margin-left:6px" />
         </label>
         <button class="btn" onclick="saveTeacher()">Simpan Nomor</button>
         <div class="small" id="teacherSaved" style="margin-left:8px"></div>
-     </div>
+      </div>
     
      <div style="height:10px"></div>
       <div style="display:flex;justify-content:space-between;align-items:center">
@@ -269,7 +301,7 @@ footer.app-footer{position:fixed;left:0;right:0;bottom:0;display:flex;justify-co
       <div style="height:8px"></div>
       <div class="small">Warna: hijau = hafal, kuning = belum hafal, merah = belum pernah dikerjakan.</div>
       <div style="height:8px"></div>
-      <div class="small">Dinyatakan menguasai (hijau) jika telah menyelesaikan latihan Drill <strong>Kesulitan Sukar (5 s)</strong> untuk semua mode <b>isian dan PG</b> dengan jumlah soal <b>10 atau 15</b>. Klik kotak untuk melihat riwayat.</div>
+      <div class="small">Dinyatakan menguasai (hijau) jika telah menyelesaikan latihan Drill <strong>Kesulitan Sukar (5 s)</strong> untuk semua mode <b>isian dan PG</b> dengan jumlah soal <b>10 atau 15</b>, dan mendapat skor **minimal 90%**. Klik kotak untuk melihat riwayat.</div>
       <div style="height:8px"></div>
       <div id="progressGrid" class="progress-grid"></div>
       <div style="height:8px"></div>
@@ -380,6 +412,7 @@ footer.app-footer{position:fixed;left:0;right:0;bottom:0;display:flex;justify-co
 
     <div id="resultView" class="card" style="display:none">
       <h3>Hasil Latihan</h3>
+      <div id="resPraise" style="margin-bottom:10px; font-size:1.1rem; text-align:center; color:#0b76c2"></div>
       <div style="display:flex;gap:8px;flex-wrap:wrap">
         <div style="background:#fff;padding:10px;border-radius:8px;text-align:center"><div class="small">Benar</div><div id="resCorrect" style="font-weight:800"></div></div>
         <div style="background:#fff;padding:10px;border-radius:8px;text-align:center"><div class="small">Salah</div><div id="resWrong" style="font-weight:800"></div></div>
@@ -443,71 +476,99 @@ const LS_KEY_PROGRESS = 'bppi_progress_v4.6';
 
 /* Navigation + panels */
 let currentPanel=null, historyStack=[];
-function showPanel(id){ const panels=['mainMenu','cover','konsep','daftar','drill','progress','latihan_mul','latihan_div','quizView','resultView','riwayat']; panels.forEach(p=>{ const el=document.getElementById(p); if(el) el.style.display=(p===id)?'block':'none'; }); currentPanel=id; updateNavActive(); updateHeaderBackVisibility(); }
-function navigate(id){ if(currentPanel && currentPanel!==id) historyStack.push(currentPanel); showPanel(id); }
-function navClick(id){ if(currentPanel && currentPanel!==id) historyStack.push(currentPanel); showPanel(id); }
-function goBack(){ if(historyStack.length>0) showPanel(historyStack.pop()); else showPanel('mainMenu'); }
-function headerBack(){ goBack(); }
-function updateNavActive(){ [['navHome','cover'],['navDaftar','daftar'],['navDrill','drill'],['navProgress','progress'],['navKali','latihan_mul'],['navBagi','latihan_div'],['navRiwayat','riwayat']].forEach(pair=>{ const el=document.getElementById(pair[0]); if(!el) return; el.classList.toggle('active', currentPanel===pair[1]); }); }
-function updateHeaderBackVisibility(){ const btn=document.getElementById('headerBack'); if(!btn) return; // hide on cover/mainMenu
-  if(currentPanel==='cover' || currentPanel==='mainMenu') btn.style.display='none'; else btn.style.display='inline-flex'; }
+function showPanel(id){
+  const panels=['mainMenu','cover','konsep','daftar','drill','progress','latihan_mul','latihan_div','quizView','resultView','riwayat'];
+  panels.forEach(p=>{
+    const el=document.getElementById(p);
+    if(el) el.style.display=(p===id)?'block':'none';
+  });
+  currentPanel=id;
+  updateNavActive();
+  updateHeaderBackVisibility();
+}
+function navigate(id){
+  if(currentPanel && currentPanel!==id) historyStack.push(currentPanel);
+  showPanel(id);
+}
+function navClick(id){
+  if(currentPanel && currentPanel!==id) historyStack.push(currentPanel);
+  showPanel(id);
+}
+function goBack(){
+  if(historyStack.length>0) showPanel(historyStack.pop());
+  else showPanel('mainMenu');
+}
+function headerBack(){
+  goBack();
+}
+function updateNavActive(){
+  [['navHome','cover'],['navDaftar','daftar'],['navDrill','drill'],['navProgress','progress'],['navKali','latihan_mul'],['navBagi','latihan_div'],['navRiwayat','riwayat']].forEach(pair=>{
+    const el=document.getElementById(pair[0]);
+    if(!el) return;
+    el.classList.toggle('active', currentPanel===pair[1]);
+  });
+}
+function updateHeaderBackVisibility(){
+  const btn=document.getElementById('headerBack');
+  if(!btn) return;
+  // hide on cover/mainMenu
+  if(currentPanel==='cover' || currentPanel==='mainMenu') btn.style.display='none';
+  else btn.style.display='inline-flex';
+}
 
 /* Identity */
-function loadIdentityObj(){ const raw=localStorage.getItem(LS_KEY_ID); return raw?JSON.parse(raw):{name:'',cls:'',abs:''}; }
-function loadIdentity(){ const raw=localStorage.getItem(LS_KEY_ID); if(raw){ try{ const o=JSON.parse(raw); document.getElementById('inputName').value=o.name||''; document.getElementById('inputClass').value=o.cls||''; document.getElementById('inputAbsen').value=o.abs||''; updateIdentityDisplay(o.name,o.cls,o.abs); document.getElementById('miniIdent').innerText=(o.name||'-')+' | '+(o.cls||'-')+' | '+(o.abs||'-'); document.getElementById('progIdent').innerText=(o.name||'-')+' | '+(o.cls||'-')+' | Absen: '+(o.abs||'-'); 
-  // PERUBAHAN REVISI FINAL: Tambahkan update histIdent
-  document.getElementById('histIdent').innerText=(o.name||'-')+' | '+(o.cls||'-')+' | Absen: '+(o.abs||'-');
-}catch(e){} } else { updateIdentityDisplay('-','-','-'); document.getElementById('miniIdent').innerText='- | - | -'; document.getElementById('progIdent').innerText='-'; 
-  // PERUBAHAN REVISI FINAL: Tambahkan update histIdent
-  document.getElementById('histIdent').innerText='-';
-} }
-function saveIdentityFromInputs(){
-  const n=document.getElementById('inputName').value.trim();
-  const c=document.getElementById('inputClass').value.trim();
-  const a=document.getElementById('inputAbsen').value.trim();
-  const currentId = loadIdentityObj();
-  const isChanged = (currentId.name !== n || currentId.cls !== c || currentId.abs !== a);
-
-  if(isChanged && (currentId.name || currentId.cls || currentId.abs)) {
-      if(!confirm('Yakin akan mengganti identitas? Semua Progres Belajar dan Riwayat Latihan yang tersimpan akan dihapus untuk menjaga keakuratan data. Lanjutkan?')) {
-          // kembalikan nilai input ke identitas tersimpan
-          document.getElementById('inputName').value = currentId.name;
-          document.getElementById('inputClass').value = currentId.cls;
-          document.getElementById('inputAbsen').value = currentId.abs;
-          return false;
-      }
-      // Hapus riwayat dan progres jika identitas berubah dan konfirmasi OK
-      localStorage.removeItem(LS_KEY_HISTORY);
-      localStorage.removeItem(LS_KEY_PROGRESS);
-      renderHistory();
-      renderProgressGrid();
-      alert('Identitas berhasil diganti. Riwayat dan Progres Belajar telah dihapus.');
-  }
-
-  localStorage.setItem(LS_KEY_ID, JSON.stringify({name:n,cls:c,abs:a}));
-  updateIdentityDisplay(n,c,a);
-  document.getElementById('miniIdent').innerText=(n||'-')+' | '+(c||'-')+' | '+(a||'-');
-  document.getElementById('progIdent').innerText=(n||'-')+' | '+(c||'-')+' | Absen: '+(a||'-');
-  // PERUBAHAN REVISI FINAL: Tambahkan update histIdent
-  document.getElementById('histIdent').innerText=(n||'-')+' | '+(c||'-')+' | Absen: '+(a||'-');
-  return true;
+function loadIdentityObj(){
+  const raw=localStorage.getItem(LS_KEY_ID);
+  return raw?JSON.parse(raw):{name:'',cls:'',abs:''};
+}
+function loadIdentity(){
+  const raw=localStorage.getItem(LS_KEY_ID);
+  if(raw){
+    try{
+      const o=JSON.parse(raw);
+      document.getElementById('inputName').value=o.name||'';
+      document.getElementById('inputClass').value=o.cls||'';
+      document.getElementById('inputAbsen').value=o.abs||'';
+      updateIdentityDisplay(o.name,o.cls,o.abs);
+      document.getElementById('miniIdent').innerText=(o.name||'-')+' | '+(o.cls||'-')+' | '+(o.abs||'-');
+      document.getElementById('progIdent').innerText=(o.name||'-')+' | '+(o.cls||'-')+' | '+(o.abs||'-');
+      document.getElementById('histIdent').innerText=(o.name||'-')+' | '+(o.cls||'-')+' | '+(o.abs||'-');
+    }catch(e){
+      console.error("Error parsing identity:", e);
+      localStorage.removeItem(LS_KEY_ID);
+      updateIdentityDisplay('-','-','-');
+    }
+  } else updateIdentityDisplay('-','-','-');
 }
 function saveIdentity(){
-    if(saveIdentityFromInputs()){
-        setTimeout(()=> showPanel('mainMenu'),100);
-    }
+  const name=document.getElementById('inputName').value.trim();
+  const cls=document.getElementById('inputClass').value.trim();
+  const abs=document.getElementById('inputAbsen').value.trim();
+  const id={name,cls,abs};
+  localStorage.setItem(LS_KEY_ID, JSON.stringify(id));
+  updateIdentityDisplay(name,cls,abs);
+  document.getElementById('miniIdent').innerText=(name||'-')+' | '+(cls||'-')+' | '+(abs||'-');
+  document.getElementById('progIdent').innerText=(name||'-')+' | '+(cls||'-')+' | '+(abs||'-');
+  document.getElementById('histIdent').innerText=(name||'-')+' | '+(cls||'-')+' | '+(abs||'-');
+  alert('Identitas tersimpan.');
+  navigate('mainMenu');
 }
-function updateIdentityDisplay(n,c,a){ document.getElementById('showName').innerText = n||'-'; document.getElementById('showClass').innerText = c||'-'; document.getElementById('showAbsen').innerText = a||'-'; }
+function updateIdentityDisplay(name,cls,abs){
+  document.getElementById('showName').innerText=name||'-';
+  document.getElementById('showClass').innerText=cls||'-';
+  document.getElementById('showAbsen').innerText=abs||'-';
+}
 function clearIdentity(){
-  if(!confirm('Hapus identitas dari perangkat? Riwayat dan Progres Belajar juga akan terhapus.')) return;
+  if(!confirm('Hapus identitas, riwayat, dan progres belajar?')) return;
   localStorage.removeItem(LS_KEY_ID);
   localStorage.removeItem(LS_KEY_HISTORY);
   localStorage.removeItem(LS_KEY_PROGRESS);
-  document.getElementById('inputName').value=''; document.getElementById('inputClass').value=''; document.getElementById('inputAbsen').value='';
+  document.getElementById('inputName').value='';
+  document.getElementById('inputClass').value='';
+  document.getElementById('inputAbsen').value='';
   updateIdentityDisplay('-','-','-');
   document.getElementById('miniIdent').innerText='- | - | -';
   document.getElementById('progIdent').innerText='-';
-  // PERUBAHAN REVISI FINAL: Tambahkan update histIdent
   document.getElementById('histIdent').innerText='-';
   renderHistory();
   renderProgressGrid();
@@ -516,27 +577,64 @@ function clearIdentity(){
 
 /* Mul rendering */
 const MUL_COLORS=['#2b8cff','#2ecc71','#f3d66a','#f29d43','#b28fe6','#0b76c2','#16a34a','#f59e0b','#f97316','#9333ea'];
-function renderMul(){ const sel=document.getElementById('mulSelect').value; const grid=document.getElementById('mulGrid'); grid.innerHTML=''; if(sel.includes('-')){ const p=sel.split('-'); const from=parseInt(p[0]); const to=parseInt(p[1]); for(let n=from;n<=to;n++) grid.appendChild(createMulCol(n)); } else grid.appendChild(createMulCol(parseInt(sel))); }
-function createMulCol(n){ const div=document.createElement('div'); div.className='mul-col'; const color=MUL_COLORS[(n-1)%MUL_COLORS.length]; div.style.background=`linear-gradient(180deg, ${shade(color,0.06)}, ${color})`; const h=document.createElement('h4'); h.innerText='Perkalian '+n; div.appendChild(h); for(let i=1;i<=10;i++){ const p=document.createElement('p'); p.innerText = i+' × '+n+' = '+(i*n); p.style.margin='4px 0'; div.appendChild(p); } return div; }
-function shade(hex,percent){ try{ const c=hex.replace('#',''); const num=parseInt(c,16); let r=(num>>16)+Math.round(255*percent); let g=((num>>8)&0x00FF)+Math.round(255*percent); let b=(num&0x0000FF)+Math.round(255*percent); r=Math.min(255,r); g=Math.min(255,g); b=Math.min(255,b); return '#'+((r<<16)|(g<<8)|b).toString(16).padStart(6,'0'); }catch(e){return hex;} }
+function renderMul(){
+  const sel=document.getElementById('mulSelect').value;
+  const grid=document.getElementById('mulGrid');
+  grid.innerHTML='';
+  if(sel.includes('-')){
+    const p=sel.split('-');
+    const from=parseInt(p[0]);
+    const to=parseInt(p[1]);
+    for(let n=from;n<=to;n++) grid.appendChild(createMulCol(n));
+  } else grid.appendChild(createMulCol(parseInt(sel)));
+}
+function createMulCol(n){
+  const div=document.createElement('div');
+  div.className='mul-col';
+  const color=MUL_COLORS[(n-1)%MUL_COLORS.length];
+  div.style.background=`linear-gradient(180deg, ${shade(color,0.06)}, ${color})`;
+  const h=document.createElement('h4');
+  h.innerText='Perkalian '+n;
+  div.appendChild(h);
+  for(let i=1;i<=10;i++){
+    const p=document.createElement('p');
+    p.innerText = i+' × '+n+' = '+(i*n);
+    p.style.margin='4px 0';
+    div.appendChild(p);
+  }
+  return div;
+}
+function shade(hex,percent){
+  try{
+    const c=hex.replace('#','');
+    const num=parseInt(c,16);
+    let r=(num>>16)+Math.round(255*percent);
+    let g=((num>>8)&0x00FF)+Math.round(255*percent);
+    let b=(num&0x0000FF)+Math.round(255*percent);
+    r=Math.min(255,r);
+    g=Math.min(255,g);
+    b=Math.min(255,b);
+    return '#'+((r<<16)|(g<<8)|b).toString(16).padStart(6,'0');
+  }catch(e){return hex;}
+}
 
 // --- NEW HELPER FUNCTIONS FOR PARAMETER BUTTONS ---
 function getSelectedParam(id){
-    const el = document.getElementById(id);
-    const selectedBtn = el.querySelector('.param-btn.selected');
-    return selectedBtn ? selectedBtn.dataset.value : null;
+  const el = document.getElementById(id);
+  const selectedBtn = el.querySelector('.param-btn.selected');
+  return selectedBtn ? selectedBtn.dataset.value : null;
 }
 function setupParamButtons(){
-    document.querySelectorAll('.param-grid').forEach(grid => {
-        grid.addEventListener('click', (e) => {
-            if (e.target.classList.contains('param-btn')) {
-                // Hapus kelas 'selected' dari semua tombol di grid ini
-                grid.querySelectorAll('.param-btn').forEach(btn => btn.classList.remove('selected'));
-                // Tambahkan kelas 'selected' pada tombol yang diklik
-                e.target.classList.add('selected');
-            }
-        });
+  document.querySelectorAll('.param-grid').forEach(grid => {
+    grid.addEventListener('click', (e) => {
+      if (e.target.classList.contains('param-btn')) {
+        // Hapus kelas 'selected' dari semua tombol di grid ini
+        grid.querySelectorAll('.param-btn').forEach(btn => btn.classList.remove('selected'));
+        // Tambahkan kelas 'selected' pada tombol yang diklik
+        e.target.classList.add('selected');
+      }
     });
+  });
 }
 // ----------------------------------------------------
 
@@ -545,77 +643,278 @@ let quizState=null, quizCallbackReplay=null, returnPanelAfterQuiz=null; // retur
 
 // MODIFIKASI: Menggunakan getSelectedParam
 function startDrill(){
-    const table=parseInt(document.getElementById('drillMul').value,10);
-    const count=parseInt(getSelectedParam('drillCount'),10);
-    const per=parseInt(getSelectedParam('drillDiff'),10);
-    const mode=getSelectedParam('drillMode');
+  const table=parseInt(document.getElementById('drillMul').value,10);
+  const count=parseInt(getSelectedParam('drillCount'),10);
+  const per=parseInt(getSelectedParam('drillDiff'),10);
+  const mode=getSelectedParam('drillMode');
+  if(!count || !per || !mode){ alert('Pilih semua parameter latihan drill.'); return; }
+  
+  const list=[];
+  for(let i=1;i<=count;i++){
+    const factor=(i%10)+1;
+    list.push({q:table+' × '+factor, a:table*factor, tExp:per, meta:{kind:'Drill Perkalian', table:table, mode:mode, difficulty:per, count:count}});
+  }
+  
+  // FIX 1: bind replay button for drill
+  quizCallbackReplay=()=>startDrill();
+  returnPanelAfterQuiz='drill'; // Set return panel for Drill
 
-    let pool=[]; for(let i=1;i<=10;i++) pool.push({q:i+'×'+table,a:i*table,tExp:per, meta:{kind:'Drill',table:table,mode:mode,difficulty:per,count:count}}); pool=shuffle(pool);
-    if(count>10){ while(pool.length<count){ const r=Math.floor(Math.random()*10)+1; pool.push({q:r+'×'+table,a:r*table,tExp:per, meta:{kind:'Drill',table:table,mode:mode,difficulty:per,count:count}}); } }
-    const list=pool.slice(0,count);
-    quizCallbackReplay=()=>startDrill();
-    returnPanelAfterQuiz='drill'; // Set return panel for Drill
-    startQuiz({list, perDefault:per, type:'Drill', drillMode:mode, detail:`Drill Perkalian ${table} (${labelDifficulty(per)})`, meta:{table:table, mode:mode, difficulty:per, count:count}});
+  startQuiz({list, perDefault:per, type:'Latihan Drill Perkalian', drillMode:mode, detail:`Perkalian ${table} (${labelDifficulty(per)})`, meta:{table:table, mode:mode, difficulty:per, count:count}});
 }
 
-// Revisi 2: Tambahkan mode ke startMulPractice
 function startMulPractice(){
-    const type=getSelectedParam('mulType');
-    const count=parseInt(getSelectedParam('mulCount'),10);
-    const per=parseInt(getSelectedParam('mulDiff'),10);
-    const mode=getSelectedParam('mulMode'); // <<< BARU: Ambil Mode
-    
-    let pool=[]; 
-    if(type==='1-5'){ // Perkalian 1-5 (1x1 s/d 10x5)
-        for(let a=1;a<=10;a++) for(let b=1;b<=5;b++) pool.push({q:a+'×'+b,a:a*b,tExp:per, meta:{kind:'Latihan Perkalian',range:'1-5',mode:mode,difficulty:per,count:count}}); 
-    } 
-    else if(type==='6-10'){ // Perkalian 6-10 (1x6 s/d 10x10)
-        for(let a=1;a<=10;a++) for(let b=6;b<=10;b++) pool.push({q:a+'×'+b,a:a*b,tExp:per, meta:{kind:'Latihan Perkalian',range:'6-10',mode:mode,difficulty:per,count:count}});
-    }
-    else if(type==='1-10') { // Perkalian 1-10 (1x1 s/d 10x10)
-        for(let a=1;a<=10;a++) for(let b=1;b<=10;b++) pool.push({q:a+'×'+b,a:a*b,tExp:per, meta:{kind:'Latihan Perkalian',range:'1-10',mode:mode,difficulty:per,count:count}}); 
-    }
-    
-    pool=shuffle(pool); 
-    const list=pool.slice(0,count);
-    quizCallbackReplay=()=>startMulPractice();
-    returnPanelAfterQuiz='latihan_mul'; // Set return panel for Latihan Perkalian
-    startQuiz({list, perDefault:per, type:'Latihan Perkalian', drillMode:mode, detail:`Perkalian ${type} (${labelDifficulty(per)})`, meta:{range:type, mode:mode, difficulty:per, count:count}});
+  const type=getSelectedParam('mulType');
+  const count=parseInt(getSelectedParam('mulCount'),10);
+  const per=parseInt(getSelectedParam('mulDiff'),10);
+  const mode=getSelectedParam('mulMode');
+  if(!type || !count || !per || !mode){ alert('Pilih semua parameter latihan perkalian.'); return; }
+
+  let min=1, max=10;
+  if(type==='1-5'){ max=5; }
+  else if(type==='6-10'){ min=6; }
+  
+  const list=[];
+  for(let i=0;i<count;i++){
+    const f1=Math.floor(Math.random()*(max-min+1))+min;
+    const f2=Math.floor(Math.random()*(10-1+1))+1;
+    list.push({q:f1+' × '+f2, a:f1*f2, tExp:per, meta:{kind:'Latihan Perkalian', type:type, mode:mode, difficulty:per, count:count}});
+  }
+  
+  quizCallbackReplay=()=>startMulPractice();
+  returnPanelAfterQuiz='latihan_mul'; // Set return panel for Latihan Perkalian
+  startQuiz({list, perDefault:per, type:'Latihan Perkalian', drillMode:mode, detail:`Perkalian ${type} (${labelDifficulty(per)})`, meta:{type:type, mode:mode, difficulty:per, count:count}});
 }
 
-// Revisi 2: Tambahkan mode ke startDivPractice
 function startDivPractice(){
-    const count=parseInt(getSelectedParam('divCount'),10);
-    const per=parseInt(getSelectedParam('divDiff'),10);
-    const range=getSelectedParam('divRange');
-    const mode=getSelectedParam('divMode'); // <<< BARU: Ambil Mode
-    
-    let maxDiv = range==='1-10'?10:20; 
-    let list=[];
-    while(list.length<count){ 
-        const divisor=Math.floor(Math.random()*maxDiv)+1; 
-        const quotient=Math.floor(Math.random()*10)+1; 
-        const dividend=divisor*quotient; 
-        if(dividend<=100) list.push({q:dividend+' ÷ '+divisor,a:quotient,tExp:per, meta:{kind:'Latihan Pembagian',range:range,mode:mode,difficulty:per,count:count}}); // <<< BARU: Simpan Mode
+  const count=parseInt(getSelectedParam('divCount'),10);
+  const per=parseInt(getSelectedParam('divDiff'),10);
+  const range=getSelectedParam('divRange');
+  const mode=getSelectedParam('divMode');
+  if(!count || !per || !range || !mode){ alert('Pilih semua parameter latihan pembagian.'); return; }
+
+  let maxDivisor=range==='1-20'?20:10;
+  
+  const list=[];
+  for(let i=0;i<count;i++){
+    // divisor * quotient = dividend
+    const divisor=Math.floor(Math.random()*maxDivisor)+1;
+    let quotient=Math.floor(Math.random()*10)+1;
+    // ensure quotient is not 0 (if random starts from 0)
+    if(quotient===0) quotient=1; 
+    const dividend=divisor*quotient;
+    if(dividend<=100) list.push({q:dividend+' ÷ '+divisor,a:quotient,tExp:per, meta:{kind:'Latihan Pembagian',range:range,mode:mode,difficulty:per,count:count}}); // <<< BARU: Simpan Mode
+  }
+  quizCallbackReplay=()=>startDivPractice();
+  returnPanelAfterQuiz='latihan_div'; // Set return panel for Latihan Pembagian
+  startQuiz({list, perDefault:per, type:'Latihan Pembagian', drillMode:mode, detail:`Pembagian ${range} (${labelDifficulty(per)})`, meta:{range:range, mode:mode, difficulty:per, count:count}});
+}
+
+function startQuiz(opts){
+  if(quizState && quizState.timerId) clearInterval(quizState.timerId);
+  quizState={
+    list:opts.list.slice(),
+    index:0,
+    answers:[],
+    startTime:Date.now(),
+    totalTimeUsed:0,
+    perDefault:opts.perDefault||10,
+    timerId:null,
+    timeLeft:0,
+    timePerQ:opts.perDefault||10,
+    type:opts.type||'Latihan',
+    drillMode:opts.drillMode||'input',
+    detail:opts.detail||'',
+    meta:opts.meta||{},
+    level:opts.perDefault
+  };
+  document.getElementById('qTotal').innerText = quizState.list.length;
+  document.getElementById('qIndex').innerText = 1;
+  showPanel('quizView');
+  showQuestion();
+  enableKeyboardForQuiz(true);
+}
+
+function showQuestion(){
+  const s=quizState;
+  if(!s) return;
+  if(s.index>=s.list.length){
+    finishQuiz();
+    return;
+  }
+  const item=s.list[s.index];
+  document.getElementById('questionText').innerText = item.q + ' = ?';
+  document.getElementById('infoText').innerText='';
+  document.getElementById('answerDisplay').innerText='-';
+  document.getElementById('qIndex').innerText = s.index+1;
+  s.timePerQ = item.tExp || s.perDefault;
+
+  if(s.drillMode==='mcq'){
+    document.getElementById('inputArea').style.display='none';
+    document.getElementById('mcqArea').style.display='block';
+    buildMCQOptions(item.a);
+  } else {
+    document.getElementById('mcqArea').style.display='none';
+    document.getElementById('inputArea').style.display='block';
+  }
+
+  startTimer(s.timePerQ);
+  s.questionStart = Date.now();
+}
+
+function buildMCQOptions(correct){
+  const optsEl=document.getElementById('mcqOptions');
+  optsEl.innerHTML='';
+
+  let choices=[correct];
+  while(choices.length<4){
+    const delta=Math.floor(Math.random()*7)+1;
+    const sign=Math.random()<0.5?-1:1;
+    let cand = correct + sign*delta;
+    if(cand<=0) cand = Math.abs(cand)+2; // Jangan sampai 0
+    // Pastikan pilihan ganda tidak melebihi 100 untuk perkalian/pembagian standar
+    if(cand > 100) cand = correct - delta;
+    if(cand<=0) cand=correct+1; // minimal 1
+
+    if(!choices.includes(cand)) choices.push(cand);
+  }
+
+  choices=shuffle(choices);
+  choices.forEach(ch=>{
+    const b=document.createElement('button');
+    b.className='mcq-btn';
+    b.innerText=ch;
+    b.onclick=()=>{
+      const isCorrect=(ch===correct);
+      b.classList.add('selected');
+      b.classList.add(isCorrect?'correct':'wrong');
+      setTimeout(()=>{
+        recordAnswer(ch,false);
+      },300);
+    };
+    optsEl.appendChild(b);
+  });
+}
+
+function startTimer(seconds){
+  stopTimer();
+  quizState.timePerQ=seconds;
+  quizState.timeLeft=seconds;
+  updateTimerDisplay(quizState.timeLeft);
+  updateProgress();
+  quizState.timerId=setInterval(()=>{
+    quizState.timeLeft--;
+    if(quizState.timeLeft<0) {
+      stopTimer();
+      recordAnswer(null, true);
+    } else {
+      updateTimerDisplay(quizState.timeLeft);
+      updateProgress();
     }
-    quizCallbackReplay=()=>startDivPractice();
-    returnPanelAfterQuiz='latihan_div'; // Set return panel for Latihan Pembagian
-    startQuiz({list, perDefault:per, type:'Latihan Pembagian', drillMode:mode, detail:`Pembagian ${range} (${labelDifficulty(per)})`, meta:{range:range, mode:mode, difficulty:per, count:count}});
+  },1000);
 }
-function startQuiz(opts){ if(quizState && quizState.timerId) clearInterval(quizState.timerId); quizState={ list:opts.list.slice(), index:0, answers:[], startTime:Date.now(), totalTimeUsed:0, perDefault:opts.perDefault||10, timerId:null, timeLeft:0, timePerQ:opts.perDefault||10, type:opts.type||'Latihan', drillMode:opts.drillMode||'input', detail:opts.detail||'', meta:opts.meta||{} }; document.getElementById('qTotal').innerText = quizState.list.length; document.getElementById('qIndex').innerText = 1; showPanel('quizView'); showQuestion(); enableKeyboardForQuiz(true); }
-function showQuestion(){ const s=quizState; if(!s) return; if(s.index>=s.list.length){ finishQuiz(); return; } const item=s.list[s.index]; document.getElementById('questionText').innerText = item.q + ' = ?'; document.getElementById('infoText').innerText=''; document.getElementById('answerDisplay').innerText='-'; document.getElementById('qIndex').innerText = s.index+1; s.timePerQ = item.tExp || s.perDefault;
-  if(s.drillMode==='mcq'){ document.getElementById('inputArea').style.display='none'; document.getElementById('mcqArea').style.display='block'; buildMCQOptions(item.a); } else { document.getElementById('mcqArea').style.display='none'; document.getElementById('inputArea').style.display='block'; }
-  startTimer(s.timePerQ); s.questionStart = Date.now();
+function stopTimer(){
+  if(quizState && quizState.timerId) clearInterval(quizState.timerId);
+  if(quizState) quizState.timerId=null;
 }
-function buildMCQOptions(correct){ const optsEl=document.getElementById('mcqOptions'); optsEl.innerHTML=''; let choices=[correct]; while(choices.length<4){ const delta=Math.floor(Math.random()*7)+1; const sign=Math.random()<0.5?-1:1; let cand = correct + sign*delta; if(cand<=0) cand = Math.abs(cand)+2; if(!choices.includes(cand)) choices.push(cand); } choices=shuffle(choices); choices.forEach(ch=>{ const b=document.createElement('button'); b.className='mcq-btn'; b.innerText=ch; b.onclick=()=>{ const isCorrect=(ch===correct); b.classList.add('selected'); b.classList.add(isCorrect?'correct':'wrong'); setTimeout(()=>{ recordAnswer(ch,false); },300); }; optsEl.appendChild(b); }); }
-function startTimer(seconds){ stopTimer(); quizState.timePerQ=seconds; quizState.timeLeft=seconds; updateTimerDisplay(quizState.timeLeft); updateProgress(); quizState.timerId=setInterval(()=>{ quizState.timeLeft--; if(quizState.timeLeft<=0){ clearInterval(quizState.timerId); quizState.timerId=null; recordAnswer(null,true); } else { updateTimerDisplay(quizState.timeLeft); updateProgress(); } },1000); }
-function stopTimer(){ if(quizState && quizState.timerId){ clearInterval(quizState.timerId); quizState.timerId=null; } }
-function updateTimerDisplay(sec){ const el=document.getElementById('timer'); if(el) el.innerText = (sec<60?('00:'+String(sec).padStart(2,'0')):formatSecondsToClock(sec)); }
-function updateProgress(){ const pct=(quizState.timeLeft/quizState.timePerQ)*100; const bar=document.getElementById('progressBar'); if(bar) bar.style.width = pct + '%'; }
-function pressKey(d){ const disp=document.getElementById('answerDisplay'); if(disp.innerText === '-') disp.innerText = d; else disp.innerText = (disp.innerText + d).replace(/^0+/, ''); }
-function pressBack(){ const disp=document.getElementById('answerDisplay'); if(disp.innerText === '-') return; disp.innerText = disp.innerText.slice(0,-1) || '-'; }
-function submitAnswer(){ const disp=document.getElementById('answerDisplay'); const val = (disp.innerText === '-'? null: parseInt(disp.innerText,10)); recordAnswer(val,false); }
-function recordAnswer(val,timedOut){ stopTimer(); const s=quizState; const item=s.list[s.index]; const end=Date.now(); const timeUsed=Math.round((end - s.questionStart)/1000); s.totalTimeUsed += timeUsed; const expected = (typeof item.a!=='undefined')? item.a : item.aVal; const correct = (val!==null && parseInt(val,10)===expected) && !timedOut; s.answers.push({q:item.q, correct, expected, given:val, time:timeUsed, timedOut, meta:item.meta||{}}); s.index++; const mcqOpts=document.querySelectorAll('#mcqOptions .mcq-btn'); mcqOpts.forEach(b=>b.disabled=true); setTimeout(()=>{ if(s.index < s.list.length) showQuestion(); else finishQuiz(); },250); }
+function updateTimerDisplay(time){
+  const el=document.getElementById('timer');
+  const minutes=Math.floor(time/60);
+  const seconds=time%60;
+  el.innerText = `${minutes.toString().padStart(2,'0')}:${seconds.toString().padStart(2,'0')}`;
+  if(time<=5) el.style.color='red';
+  else el.style.color='var(--muted)';
+}
+function updateProgress(){
+  const progressEl=document.getElementById('progressBar');
+  if(quizState && quizState.timePerQ){
+    const pct = (quizState.timeLeft / quizState.timePerQ) * 100;
+    progressEl.style.width = pct+'%';
+    if(pct<30) progressEl.style.background='red';
+    else if(pct<60) progressEl.style.background='orange';
+    else progressEl.style.background='var(--primary)';
+  } else progressEl.style.width='100%';
+}
+
+function pressKey(key){
+  const current=document.getElementById('answerDisplay').innerText;
+  if(current==='-') document.getElementById('answerDisplay').innerText = key;
+  else document.getElementById('answerDisplay').innerText += key;
+}
+function pressBack(){
+  const current=document.getElementById('answerDisplay').innerText;
+  if(current.length>1) document.getElementById('answerDisplay').innerText = current.slice(0,-1);
+  else document.getElementById('answerDisplay').innerText = '-';
+}
+function submitAnswer(){
+  const answerStr=document.getElementById('answerDisplay').innerText;
+  if(answerStr==='-' || answerStr==='') return;
+  recordAnswer(parseInt(answerStr,10), false);
+}
+
+function recordAnswer(givenAnswer, timedOut){
+  stopTimer();
+  const item=quizState.list[quizState.index];
+  const isCorrect = givenAnswer===item.a;
+  const timeTaken = Math.round((Date.now() - quizState.questionStart) / 1000);
+  quizState.totalTimeUsed += timeTaken;
+
+  quizState.answers.push({
+    q: item.q,
+    expected: item.a,
+    given: givenAnswer,
+    correct: isCorrect,
+    timedOut: timedOut,
+    time: timeTaken
+  });
+
+  if(!isCorrect) {
+    document.getElementById('infoText').innerText = timedOut ? '❌ Waktu Habis!' : '❌ Salah!';
+    document.getElementById('questionText').style.color='red';
+    setTimeout(()=>{
+      quizState.index++;
+      document.getElementById('questionText').style.color='inherit';
+      showQuestion();
+    }, 500);
+  } else {
+    document.getElementById('infoText').innerText = '✅ Benar!';
+    document.getElementById('questionText').style.color='var(--accent)';
+    setTimeout(()=>{
+      quizState.index++;
+      document.getElementById('questionText').style.color='inherit';
+      showQuestion();
+    }, 300);
+  }
+}
+
+function endQuizEarly(){
+  if(!confirm('Apakah Anda yakin ingin menyelesaikan latihan lebih awal?')) return;
+  stopTimer();
+  finishQuiz();
+}
+
+function enableKeyboardForQuiz(enable){
+  // Hanya aktifkan/nonaktifkan penanganan Enter
+  if(enable){
+    document.addEventListener('keydown', handleQuizKeydown);
+  } else {
+    document.removeEventListener('keydown', handleQuizKeydown);
+  }
+}
+
+function handleQuizKeydown(e){
+  // Hanya proses jika di panel kuis dan mode isian
+  if(currentPanel !== 'quizView' || quizState.drillMode === 'mcq') return;
+
+  const key = e.key;
+  if (key >= '0' && key <= '9') {
+    pressKey(key);
+  } else if (key === 'Enter') {
+    submitAnswer();
+  } else if (key === 'Backspace') {
+    pressBack();
+  }
+}
+
 function finishQuiz(){
   stopTimer();
   const total=quizState.list.length;
@@ -623,7 +922,17 @@ function finishQuiz(){
   const wrong=total-correct;
   const pct=Math.round((correct/total)*100);
   const quizReturnPanel = returnPanelAfterQuiz; // capture return panel
-
+  
+  // --- 1. LOGIKA PUJIAN (BARU) ---
+  let praiseText = '';
+  if (pct === 100) {
+      praiseText = '🤩 *HEBAT! Kerja yang luar biasa!* 🥳 Anda mendapat nilai sempurna!';
+  } else if (pct >= 90) {
+      praiseText = '👍 *BAGUS SEKALI!* Hanya sedikit lagi menuju sempurna.';
+  }
+  document.getElementById('resPraise').innerHTML = praiseText;
+  
+  // --- 2. TAMPILKAN HASIL BIASA ---
   document.getElementById('resCorrect').innerText = correct;
   document.getElementById('resWrong').innerText = wrong;
   document.getElementById('resScore').innerText = pct+'%';
@@ -640,14 +949,40 @@ function finishQuiz(){
     if(!a.correct) d.style.background='#fff7f7';
     wl.appendChild(d);
   });
-
+  
   // auto save history
-  const entry = { idName:id.name||'', idClass:id.cls||'', idAbsen:id.abs||'', type: quizState.type||'', detail: quizState.detail||'', count: quizState.list.length, correct: correct, wrong: wrong, score: pct, timeSecs: quizState.totalTimeUsed, date: (new Date()).toISOString(), metaSummary: extractMetaSummary(quizState), meta: quizState.meta||{} };
+  const entry = {
+    idName:id.name||'',
+    idClass:id.cls||'',
+    idAbsen:id.abs||'',
+    type: quizState.type||'',
+    detail: quizState.detail||'',
+    count: quizState.list.length,
+    correct: correct,
+    wrong: wrong,
+    score: pct,
+    timeSecs: quizState.totalTimeUsed,
+    date: (new Date()).toISOString(),
+    mode: quizState.drillMode, // <--- TAMBAHAN BARU: Mode
+    metaSummary: extractMetaSummary(quizState),
+    meta: quizState.meta||{}
+  };
   addHistoryEntry(entry);
   // update progress
   updateProgressDataFromEntry(entry);
-  // prepare share preview
-  prepareSharePreview();
+  
+  // --- 3. SIAPKAN PESAN BERBAGI (DIPASTIKAN BERSIH TANPA PUJIAN) ---
+  const timeStr=formatSecondsFull(quizState.totalTimeUsed);
+  const quizType = quizState.type||''; 
+  const detail = quizState.detail||'';
+  const mode = quizState.drillMode;
+  const level = quizState.level;
+
+  // Membuat pesan yang bersih (tidak menyertakan resPraise)
+  const msg=`Hasil Latihan:\nNama: ${id.name||'-'}\nKelas: ${id.cls||'-'}\nNo. Absen: ${id.abs||'-'}\nJenis: ${quizType}\nDetail: ${detail}\nMode: ${getModeName(mode)}\nSkor: ${correct}/${total} (${pct}%)\nWaktu: ${timeStr}\nLevel: ${getLevelName(level)}`;
+
+  document.getElementById('shareWhats').dataset.msg = encodeURIComponent(msg);
+  document.getElementById('sharePreview').innerText = msg;
 
   // FIX 3: bind done button -> return to correct panel
   document.getElementById('doneBtn').onclick = ()=> {
@@ -660,77 +995,111 @@ function finishQuiz(){
     if(typeof quizCallbackReplay==='function') quizCallbackReplay();
     else alert('Tidak ada sesi untuk diulang.');
   };
-
+  
   showPanel('resultView');
   renderProgressGrid();
   renderHistory();
 }
 
 /* History management */
-function loadHistory(){ const raw=localStorage.getItem(LS_KEY_HISTORY); return raw?JSON.parse(raw):[]; }
-function saveHistory(hist){ localStorage.setItem(LS_KEY_HISTORY, JSON.stringify(hist)); }
-function addHistoryEntry(entry){ const hist = loadHistory(); hist.unshift(entry); saveHistory(hist); renderHistory(); }
-function clearAllHistory(){ if(!confirm('Hapus SEMUA riwayat latihan? Tindakan ini tidak dapat dibatalkan. Riwayat dan Progres Belajar akan hilang.')) return; localStorage.removeItem(LS_KEY_HISTORY); localStorage.removeItem(LS_KEY_PROGRESS); renderHistory(); renderProgressGrid(); alert('Semua riwayat dan progres berhasil dihapus.'); }
+function loadHistory(){
+  const raw=localStorage.getItem(LS_KEY_HISTORY);
+  return raw?JSON.parse(raw):[];
+}
+function saveHistory(hist){
+  localStorage.setItem(LS_KEY_HISTORY, JSON.stringify(hist));
+}
+function addHistoryEntry(entry){
+  const hist = loadHistory();
+  // Riwayat disimpan dari terbaru
+  hist.unshift(entry);
+  saveHistory(hist);
+  // renderHistory dipanggil di finishQuiz
+}
+function clearAllHistory(){
+  if(!confirm('Hapus SEMUA riwayat latihan? Tindakan ini tidak dapat dibatalkan. Riwayat dan Progres Belajar akan hilang.')) return;
+  localStorage.removeItem(LS_KEY_HISTORY);
+  localStorage.removeItem(LS_KEY_PROGRESS);
+  renderHistory();
+  renderProgressGrid();
+  alert('Semua riwayat dan progres berhasil dihapus.');
+}
 
-// PERUBAHAN REVISI FINAL: Menghapus kolom Nama, Kelas, No. Absen dari tabel
-function renderHistory(){ 
+// PERUBAHAN RIWAYAT: Fungsi renderHistory() diubah total
+function renderHistory(){
+  // Menggunakan loadHistory(), yang sudah tersimpan dengan urutan: Terbaru di index 0
   const hist = loadHistory(); 
-  const container=document.getElementById('historyList'); 
-  container.innerHTML=''; 
-  if(hist.length===0){ container.innerHTML='<div class="small">Belum ada riwayat latihan.</div>'; return; }
+  const container=document.getElementById('historyList');
+  container.innerHTML='';
+
+  if(hist.length===0){
+    container.innerHTML='<div class="small">Belum ada riwayat latihan.</div>';
+    return;
+  }
+
+  const table=document.createElement('table');
+  table.className='hist';
+  table.style.width='100%';
+  table.style.borderCollapse='collapse';
   
-  const table=document.createElement('table'); 
-  table.className='hist'; 
-  table.style.width='100%'; 
-  table.style.borderCollapse='collapse'; 
-  
-  const thead=document.createElement('thead'); 
-  // PERUBAHAN: Hanya menyisakan kolom yang relevan (tanpa identitas siswa)
-  thead.innerHTML='<tr><th>No</th><th>Tanggal</th><th>Jenis</th><th>Detail</th><th>Mode</th><th>Skor</th><th>Benar</th><th>Waktu</th><th>Aksi</th></tr>'; 
+  const thead=document.createElement('thead');
+  thead.innerHTML='<tr><th>No</th><th>Tanggal</th><th>Jenis Latihan</th><th>Detail</th><th>Mode</th><th>Skor</th><th>Waktu</th></tr>';
   table.appendChild(thead);
-  
+
   const tbody=document.createElement('tbody');
-  hist.forEach((h,idx)=>{ 
-    const modeLabel = h.meta && h.meta.mode ? (h.meta.mode === 'mcq' ? 'PG' : 'Isian') : '-'; 
-    const tr=document.createElement('tr'); 
-    const date=new Date(h.date).toLocaleString(); 
-    // PERUBAHAN: Menghilangkan h.idName, h.idClass, h.idAbsen dari <td>
-    tr.innerHTML=`<td style="text-align:center">${idx+1}</td><td>${date}</td><td>${h.type}</td><td>${h.detail||'-'}</td><td style="text-align:center">${modeLabel}</td><td style="text-align:center">${h.score}%</td><td style="text-align:center">${h.correct}</td><td>${formatSecondsFull(h.timeSecs)}</td><td></td>`; 
-    const cell=tr.querySelector('td:last-child'); 
-    const sendBtn=document.createElement('button'); 
-    sendBtn.className='btn outline'; 
-    sendBtn.style.marginRight='6px'; 
-    sendBtn.innerText='Kirim'; 
-    sendBtn.onclick=()=>{ previewAndSendHistoryEntry(h); }; 
-    const copyBtn=document.createElement('button'); 
-    copyBtn.className='btn outline'; 
-    copyBtn.innerText='Salin'; 
-    copyBtn.onclick=()=>{ navigator.clipboard.writeText(makeMessageFromEntry(h)).then(()=> alert('Pesan disalin.')); }; 
-    cell.appendChild(sendBtn); 
-    cell.appendChild(copyBtn); 
-    tbody.appendChild(tr); 
+  // hist sudah terurut dari terbaru ke terlama, jadi loop ini akan menampilkannya dengan benar.
+  hist.forEach((h,idx)=>{
+    const row=document.createElement('tr');
+    
+    let scoreClass = '';
+    if(h.score === 100) scoreClass = 'score-100';
+    else if(h.score < 60) scoreClass = 'score-60';
+    row.className = scoreClass;
+    
+    const modeText = getModeName(h.mode) || '-'; 
+    
+    row.innerHTML=`
+      <td>${idx+1}</td>
+      <td>${new Date(h.date).toLocaleDateString('id-ID')}</td>
+      <td style="text-align:left">${h.type}</td>
+      <td style="text-align:left">${h.detail||'-'}</td>
+      <td>${modeText}</td>
+      <td>${h.score}%</td>
+      <td>${formatSecondsFull(h.timeSecs)}</td>
+    `;
+    tbody.appendChild(row);
   });
-  table.appendChild(tbody); 
-  container.appendChild(table); 
+  table.appendChild(tbody);
+  container.appendChild(table);
 }
 
-/* send/copy all history */
-// Revisi 1: Tambahkan mode pada pesan yang dikirim/disalin
-function makeMessageFromEntry(h){ 
-    const modeLabel = h.meta && h.meta.mode ? (h.meta.mode === 'mcq' ? 'Pilihan Ganda' : 'Isian') : '-';
-    return `Hasil Latihan:\nNama: ${h.idName||'-'}\nKelas: ${h.idClass||'-'}\nNo. Absen: ${h.idAbsen||'-'}\nJenis: ${h.type}\nDetail: ${h.detail||'-'}\nMode: ${modeLabel}\nSkor: ${h.score}%\nBenar: ${h.correct} | Salah: ${h.wrong}\nWaktu: ${formatSecondsFull(h.timeSecs)}\nTanggal: ${new Date(h.date).toLocaleString()}`; 
+// FIX 5: Fungsi Helper untuk format waktu yang konsisten (dari prepareSharePreview)
+function formatSecondsFull(sec){
+  if(typeof sec!=='number') sec=Number(sec)||0;
+  if(sec<60) return `${sec} detik`;
+  const m=Math.floor(sec/60);
+  const s=sec%60;
+  return `${m} m ${s} d`;
 }
-function previewAndSendHistoryEntry(entry){ const saved=localStorage.getItem(LS_KEY_TEACHER); if(!saved){ if(confirm('Nomor guru belum disimpan. Mau salin pesan untuk dikirim manual?')){ navigator.clipboard.writeText(makeMessageFromEntry(entry)).then(()=> alert('Pesan disalin.')); } return; } const url='https://wa.me/'+saved+'?text='+encodeURIComponent(makeMessageFromEntry(entry)); window.open(url,'_blank'); }
+
 function sendAllHistory(){
   const hist=loadHistory();
-  if(hist.length===0){ alert('Belum ada riwayat untuk dikirim.'); return; }
+  if(hist.length===0){
+    alert('Belum ada riwayat untuk dikirim.');
+    return;
+  }
   const id=loadIdentityObj();
   const saved=localStorage.getItem(LS_KEY_TEACHER);
+
   // FIX 5: Tambahkan identitas siswa di awal pesan
   let full='*Data Siswa:*%0ANama:%20'+encodeURIComponent(id.name||'-')+'%0AKelas:%20'+encodeURIComponent(id.cls||'-')+'%0ANo.%20Absen:%20'+encodeURIComponent(id.abs||'-')+'%0A%0A*Rekap Riwayat Latihan (Terbaru):*%0A';
+  
   hist.forEach((h,idx)=>{
-    full += encodeURIComponent(`${idx+1}. ${h.type} - ${h.detail||'-'} - Skor ${h.score}% - ${formatSecondsFull(h.timeSecs)} - ${new Date(h.date).toLocaleDateString('id-ID')}\n`);
+    // TAMBAH MODE di pesan
+    const modeText = getModeName(h.mode) || '-';
+    full += encodeURIComponent(`${idx+1}. ${h.type} (${modeText}) - ${h.detail||'-'} - Skor ${h.score}% - ${formatSecondsFull(h.timeSecs)} - ${new Date(h.date).toLocaleDateString('id-ID')}\n`);
   });
+
   if(!saved){
     if(confirm('Nomor guru belum disimpan. Mau salin pesan lengkap untuk dikirim manual?')){
       navigator.clipboard.writeText(decodeURIComponent(full).replace(/%0A/g, '\n').replace(/%20/g, ' ')).then(() => alert('Pesan rekap disalin.'));
@@ -740,85 +1109,120 @@ function sendAllHistory(){
   const url='https://wa.me/'+saved+'?text='+full;
   window.open(url,'_blank');
 }
+
 function copyAllHistory(){
   const hist=loadHistory();
-  if(hist.length===0){ alert('Belum ada riwayat.'); return; }
+  if(hist.length===0){
+    alert('Belum ada riwayat.');
+    return;
+  }
   const id=loadIdentityObj();
+  
   // FIX 5: Tambahkan identitas siswa di awal pesan
   let text=`Data Siswa:\nNama: ${id.name||'-'}\nKelas: ${id.cls||'-'}\nNo. Absen: ${id.abs||'-'}\n\nRekap Riwayat Latihan (Terbaru):\n`;
+  
   hist.forEach((h,idx)=>{
-    text += `${idx+1}. ${h.type} - ${h.detail||'-'} - Skor ${h.score}% - ${formatSecondsFull(h.timeSecs)} - ${new Date(h.date).toLocaleDateString('id-ID')}\n`;
+    // TAMBAH MODE di pesan
+    const modeText = getModeName(h.mode) || '-';
+    text += `${idx+1}. ${h.type} (${modeText}) - ${h.detail||'-'} - Skor ${h.score}% - ${formatSecondsFull(h.timeSecs)} - ${new Date(h.date).toLocaleDateString('id-ID')}\n`;
   });
   navigator.clipboard.writeText(text).then(()=> alert('Rekap riwayat disalin.'));
 }
 
 /* Teacher phone */
-function formatPhone(input){ let s=input.replace(/\s+/g,'').replace(/\+/g,''); if(s.startsWith('0')) s='62'+s.slice(1); if(!/^[0-9]{8,15}$/.test(s)) return null; return s; }
-function saveTeacher(){ let num=document.getElementById('teacherNumber').value.trim(); if(!num){ localStorage.removeItem(LS_KEY_TEACHER); document.getElementById('teacherSaved').innerText='Nomor dihapus.'; alert('Nomor guru dihapus.'); renderHistory(); return; } const f=formatPhone(num); if(!f){ alert('Nomor tidak valid. Gunakan format Indonesia, contoh: 62812... atau 0812...'); return; } localStorage.setItem(LS_KEY_TEACHER,f); document.getElementById('teacherSaved').innerText='Nomor tersimpan: '+f; alert('Nomor guru disimpan: '+f); }
+function formatPhone(input){
+  let s=input.replace(/\s/g,'').replace(/[^0-9+]/g,'');
+  if(s.startsWith('+62')) s='62'+s.substring(3);
+  if(s.startsWith('0')) s='62'+s.substring(1);
+  if(!s.startsWith('62')) s='62'+s;
+  return s;
+}
+function saveTeacher(){
+  const num=document.getElementById('teacherNumber').value.trim();
+  if(!num) { localStorage.removeItem(LS_KEY_TEACHER); document.getElementById('teacherSaved').innerText='Nomor Guru terhapus.'; return; }
+  const formatted=formatPhone(num);
+  localStorage.setItem(LS_KEY_TEACHER, formatted);
+  document.getElementById('teacherSaved').innerText='Nomor tersimpan: '+formatted;
+  alert('Nomor WhatsApp Guru tersimpan.');
+}
 
-/* Progress data */
-function loadProgress(){ const raw=localStorage.getItem(LS_KEY_PROGRESS); return raw?JSON.parse(raw):{}; }
-function saveProgress(p){ localStorage.setItem(LS_KEY_PROGRESS, JSON.stringify(p)); }
-
-// MODIFIKASI: Logika Mastery diperbarui untuk hanya Kesulitan 5s dan count >= 10
+/* Progress logic */
+function loadProgress(){
+  const raw=localStorage.getItem(LS_KEY_PROGRESS);
+  return raw?JSON.parse(raw):{};
+}
+function saveProgress(prog){
+  localStorage.setItem(LS_KEY_PROGRESS, JSON.stringify(prog));
+}
 function updateProgressDataFromEntry(entry){
+  // Hanya proses Drill Perkalian
+  if(entry.type !== 'Latihan Drill Perkalian') return;
+
   try{
-    const p = loadProgress();
-    const tables = entry.metaSummary && entry.metaSummary.tables ? entry.metaSummary.tables : parseTablesFromDetail(entry.detail);
-    if(tables.length===0) return;
-    tables.forEach(t=>{
-      if(!p[t]) p[t] = { records: [] , bestScore:0, mastered:false};
-      const rec = { mode: entry.meta && entry.meta.mode ? entry.meta.mode : (entry.type && entry.type.includes('Drill') ? (entry.meta && entry.meta.mode?entry.meta.mode:'input') : 'input'), difficulty: entry.meta && entry.meta.difficulty ? entry.meta.difficulty : null, count: entry.count || 0, score: entry.score || 0, date: entry.date };
-      p[t].records.push(rec);
-      p[t].bestScore = Math.max(p[t].bestScore||0, entry.score||0);
+    const prog=loadProgress();
+    const tables=parseTablesFromDetail(entry.detail);
+    const score=entry.score;
+    const mode=entry.meta.mode;
+    const difficulty=entry.meta.difficulty;
+    const count=entry.meta.count;
+    
+    tables.forEach(table=>{
+      if(!prog[table]) prog[table]={records:[], bestScore:0};
       
-      // >>> MODIFIKASI LOGIKA MASTERY
-      const requiredDiffs = [5]; // Hanya Kesulitan Sukar (5 detik)
-      const modes = ['input','mcq'];
-      let mastered = true;
-      for(const m of modes){
-        for(const d of requiredDiffs){ 
-          // Cek apakah ada record yang: mode=m, difficulty=5, count>=10, dan score>=90
-          const ok = p[t].records.some(r => r.mode===m && r.difficulty==d && r.count>=10 && r.score>=90);
-          if(!ok) { mastered = false; break; }
-        }
-        if(!mastered) break;
+      // Update best score
+      if(score > prog[table].bestScore) prog[table].bestScore = score;
+      
+      // Kriteria Hafal (REVISI SKOR): Skor MINIMAL 90% pada Sukar (5s) dengan jumlah 10 atau 15
+      if(score>=90 && difficulty===5 && (count===10 || count===15)){
+        const key=`${mode}-${difficulty}-${count}`;
+        if(!prog[table].mastery) prog[table].mastery={};
+        prog[table].mastery[key]=true;
       }
-      p[t].mastered = mastered;
-      // <<< AKHIR MODIFIKASI LOGIKA MASTERY
+
+      // Simpan record
+      prog[table].records.push({score, mode, difficulty, count, date:entry.date});
+      // Sort dan batasi (misalnya 10 record terakhir)
+      prog[table].records.sort((a,b)=>new Date(b.date)-new Date(a.date));
+      prog[table].records=prog[table].records.slice(0,10);
     });
-    saveProgress(p);
-  }catch(e){ console.warn('updateProgressDataFromEntry failed', e); }
+    saveProgress(prog);
+  } catch(e) {
+    console.warn('updateProgressDataFromEntry failed', e);
+  }
 }
 function parseTablesFromDetail(detail){
-  const res=[]; if(!detail) return res;
+  const res=[];
+  if(!detail) return res;
+
   const mRange = detail.match(/Perkalian\s*([0-9]+)\s*[–-]\s*([0-9]+)/i); // Handle '–' (en dash) and '-' (hyphen)
-  if(mRange){ const from=parseInt(mRange[1]), to=parseInt(mRange[2]); for(let i=from;i<=to;i++) res.push(i); return res; }
+  if(mRange){
+    const from=parseInt(mRange[1]), to=parseInt(mRange[2]);
+    for(let i=from;i<=to;i++) res.push(i);
+    return res;
+  }
   const mSingle = detail.match(/Perkalian\s*([0-9]+)/i);
-  if(mSingle){ res.push(parseInt(mSingle[1],10)); return res; }
-  const m1to5 = detail.match(/1–5/); if(m1to5){ for(let i=1;i<=5;i++) res.push(i); return res; }
-  const m1to10 = detail.match(/1–10/); if(m1to10){ for(let i=1;i<=10;i++) res.push(i); return res; }
+  if(mSingle){
+    res.push(parseInt(mSingle[1],10));
+    return res;
+  }
+  
   return res;
 }
-
 // Revisi 3: Fungsi untuk Kirim Progres
 function sendProgress(){
   const p = loadProgress();
   const id = loadIdentityObj();
   const saved = localStorage.getItem(LS_KEY_TEACHER);
-
   if (!saved) {
     if (confirm('Nomor guru belum disimpan. Mau salin pesan progres untuk dikirim manual?')) {
       copyProgress();
     }
     return;
   }
-  
   const msg = makeProgressMessage(p, id);
   const url = 'https://wa.me/' + saved + '?text=' + encodeURIComponent(msg);
   window.open(url, '_blank');
 }
-
 // Revisi 3: Fungsi untuk Salin Progres
 function copyProgress(){
   const p = loadProgress();
@@ -826,52 +1230,82 @@ function copyProgress(){
   const msg = makeProgressMessage(p, id);
   navigator.clipboard.writeText(msg).then(() => alert('Pesan progres disalin.'));
 }
-
 // Revisi 3: Fungsi Helper untuk membuat pesan Progres (Format WA)
 function makeProgressMessage(progressData, identity){
   let msg = `*LAPORAN PROGRES BELAJAR PERKALIAN*\n`;
-  msg += `Nama: ${identity.name || '-'}\n`;
-  msg += `Kelas: ${identity.cls || '-'}\n`;
-  msg += `No. Absen: ${identity.abs || '-'}\n`;
-  msg += `Tanggal Laporan: ${new Date().toLocaleDateString('id-ID')}\n\n`;
-  msg += `*REKAP PROGRES PERKALIAN (1 - 10):*\n`;
+  msg += `Nama: ${identity.name||'-'}\nKelas: ${identity.cls||'-'}\nNo. Absen: ${identity.abs||'-'}\n\n`;
+  // PERUBAHAN TEKS LAPORAN WA
+  msg += `*Status Hafalan (Skor Min. 90% pada Level Sukar 5s, Soal 10/15):*\n`;
+  
+  let allMastered = true;
+  for (let i = 1; i <= 10; i++) {
+    const p = progressData[i];
+    let status = '❌ BELUM HAFAL: ';
+    let score = '0%';
+    let isMastered = false;
 
-  for(let i=1; i<=10; i++){
-    const prog = progressData[i];
-    let status = '❌ Belum Dikerjakan';
-    let detail = '';
-    
-    if(prog && prog.records && prog.records.length > 0){
-        if(prog.mastered){
-            status = '✅ HAFAL (LULUS)';
-        } else {
-            status = '⚠️ Belum Hafal';
-        }
-        detail = `(Skor terbaik: ${prog.bestScore}%)`;
+    if(p && p.mastery){
+      const mcqMastered = p.mastery['mcq-5-10'] || p.mastery['mcq-5-15'];
+      const inputMastered = p.mastery['input-5-10'] || p.mastery['input-5-15'];
+      
+      if(mcqMastered && inputMastered){
+        status = '✅ HAFAL: ';
+        isMastered = true;
+      } else if(mcqMastered || inputMastered){
+        status = '⚠️ BELUM LENGKAP: ';
+        isMastered = false;
+      }
     }
-    msg += `• Perkalian ${String(i).padStart(2,' ')}: ${status} ${detail}\n`;
+
+    if (!isMastered) allMastered = false;
+    if(p && p.bestScore) score = p.bestScore + '%';
+
+    msg += `Perkalian ${i}: ${status} (Skor Terbaik: ${score})\n`;
   }
-  
-  msg += '\n*Keterangan:* \n✅ Hafal (LULUS): Sudah LULUS drill (5s, skor min 90%) mode isian & PG.\n⚠️ Belum Hafal: Sudah pernah mengerjakan namun belum LULUS drill.\n❌ Belum Dikerjakan: Belum ada riwayat latihan drill.';
-  
+
+  msg += `\n*REKAP KESIMPULAN:* ${allMastered ? 'SELURUH PERKALIAN 1-10 SUDAH DIKUASAI LUNAS!' : 'MASIH ADA YANG HARUS DIHAFAL LENGKAP!'}`;
+
   return msg;
 }
 
-function renderProgressGrid(){ const container=document.getElementById('progressGrid'); container.innerHTML=''; const p = loadProgress();
+
+function getProgressState(table, progressData){
+  const p=progressData[table];
+  if(!p) return 'red';
+
+  const mcqMastered = (p.mastery && (p.mastery['mcq-5-10'] || p.mastery['mcq-5-15']));
+  const inputMastered = (p.mastery && (p.mastery['input-5-10'] || p.mastery['input-5-15']));
+
+  if(mcqMastered && inputMastered) return 'green';
+  if(p.records.length > 0) return 'yellow'; // Sudah pernah mencoba, tapi belum lunas
+  return 'red';
+}
+function renderProgressGrid(){
+  const container=document.getElementById('progressGrid');
+  container.innerHTML='';
+  const p = loadProgress();
+
   for(let i=1;i<=10;i++){
-    const box=document.createElement('div'); box.className='prog-box';
-    let state='red';
-    if(p[i] && p[i].records && p[i].records.length>0){ state = p[i].mastered ? 'green' : 'yellow'; }
-    box.classList.add(state);
-    const label = document.createElement('div'); label.className='label'; label.innerText = 'Perkalian ' + i;
-    const icon = document.createElement('div'); icon.className='icon';
-    if(state==='green') icon.innerText='✅'; else if(state==='yellow') icon.innerText='⚠️'; else icon.innerText='❌';
-    box.appendChild(label); box.appendChild(icon);
-    box.onclick = ()=> {
-      const recs = (p[i] && p[i].records) ? p[i].records.slice().reverse() : [];
-      let msg = `Perkalian ${i}\nStatus: ${state==='green'?'Hafal':state==='yellow'?'Belum hafal':'Belum pernah'}\nSkor terbaik: ${p[i]?p[i].bestScore+'%':'-'}\n\nRiwayat (terbaru):\n`;
+    const state=getProgressState(i,p);
+    const box=document.createElement('div');
+    box.className=`prog-box ${state}`;
+    
+    let icon = '❌';
+    let label = 'Belum';
+    if(state==='green') { icon='✅'; label='Hafal'; }
+    else if(state==='yellow') { icon='⚠️'; label='Latihan'; }
+    
+    box.innerHTML=`<div class="label">P. ${i}</div><div class="icon">${icon}</div><div class="label">${label}</div>`;
+    box.onclick=()=>{
+      // RIWAYAT DI PROGRES: ditampilkan TERBARU DI ATAS (records sudah terurut di updateProgressDataFromEntry)
+      const recs = (p[i] && p[i].records) ? p[i].records : []; 
+      let msg = `Perkalian ${i}\nStatus: ${state==='green'?'Hafal':state==='yellow'?'Sudah Pernah Coba':'Belum pernah'}\nSkor terbaik: ${p[i]?p[i].bestScore+'%':'-'}\n\nRiwayat (terbaru):\n`;
+      
       if(recs.length===0) msg += '- belum ada riwayat -';
-      else recs.slice(0,8).forEach((r,idx)=>{ msg += `${idx+1}. Mode:${r.mode} | Dif:${r.difficulty} | Jumlah:${r.count} | Skor:${r.score}% | ${new Date(r.date).toLocaleDateString('id-ID')}\n`; });
+      else recs.slice(0,8).forEach((r,idx)=>{
+        const modeText = getModeName(r.mode) || '-';
+        msg += `${idx+1}. Mode:${modeText} | Dif:${r.difficulty}s | Soal:${r.count} | Skor:${r.score}% | ${new Date(r.date).toLocaleDateString('id-ID')}\n`;
+      });
       alert(msg);
     };
     container.appendChild(box);
@@ -882,102 +1316,85 @@ function renderProgressGrid(){ const container=document.getElementById('progress
 function extractMetaSummary(quizStateObj){
   try{
     const tables = [];
-    quizStateObj.list.forEach(it => { if(it.meta && it.meta.table) tables.push(it.meta.table); else {
-      const m = (it.q || '').match(/×\s*([0-9]+)/); if(m){ const t = parseInt(m[1],10); if(!isNaN(t)) tables.push(t); }
-    }});
+    quizStateObj.list.forEach(it => {
+      if(it.meta && it.meta.table) tables.push(it.meta.table);
+      else {
+        const m = (it.q || '').match(/×\s*([0-9]+)/);
+        if(m){
+          const t = parseInt(m[1],10);
+          if(!isNaN(t)) tables.push(t);
+        }
+      }
+    });
     const unique = Array.from(new Set(tables));
     return { tables: unique };
   }catch(e){ return {}; }
 }
 
-/* share preview */
-function prepareSharePreview(){ const id=loadIdentityObj(); const total=quizState.list.length; const correct=quizState.answers.filter(a=>a.correct).length; const wrong=total-correct; const timeStr=formatSecondsFull(quizState.totalTimeUsed); const type=quizState.type||''; 
-const modeLabel = quizState.meta && quizState.meta.mode ? (quizState.meta.mode === 'mcq' ? 'Pilihan Ganda' : 'Isian') : '-';
-const text = `Hasil Latihan:\nNama: ${id.name||'-'}\nKelas: ${id.cls||'-'}\nNo. Absen: ${id.abs||'-'}\nJenis: ${type}\nDetail: ${quizState.detail||'-'}\nMode: ${modeLabel}\nSkor: ${Math.round((correct/total)*100)}%\nBenar: ${correct} | Salah: ${wrong}\nWaktu: ${timeStr}`; document.getElementById('sharePreview').innerText = text; document.getElementById('shareWhats').dataset.msg = encodeURIComponent(text); }
-
-/* keyboard support for desktop — versi perbaikan Enter/NumpadEnter */
-let keyboardEnabled = false;
-function enableKeyboardForQuiz(enable){
-  keyboardEnabled = !!enable;
+function escapeHtml(str){
+  if(!str) return '';
+  return String(str).replace(/[&<>"']/g, function(m){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m];});
 }
 
-/* pastikan tombol Enter dan NumpadEnter keduanya berfungsi */
-window.addEventListener('keydown', (e) => {
-  if (!keyboardEnabled) return;
-  if (currentPanel !== 'quizView') return;
-
-  // angka dari keyboard biasa
-  if (e.key >= '0' && e.key <= '9') {
-    pressKey(e.key);
-    e.preventDefault();
-    return;
+function shuffle(a){
+  for(let i=a.length-1;i>0;i--){
+    const j=Math.floor(Math.random()*(i+1));
+    [a[i],a[j]]=[a[j],a[i]];
   }
-
-  // angka dari numpad
-  if (e.code && e.code.startsWith('Numpad')) {
-    const d = e.code.replace('Numpad', '');
-    if (!isNaN(d) && d !== 'Enter') {
-      pressKey(d);
-      e.preventDefault();
-      return;
-    }
-  }
-
-  // hapus/backspace
-  if (e.key === 'Backspace' || e.code === 'Delete') {
-    pressBack();
-    e.preventDefault();
-    return;
-  }
-
-  // Enter dari keyboard utama atau numpad
-  if (e.key === 'Enter' || e.code === 'Enter' || e.code === 'NumpadEnter') {
-    submitAnswer();
-    e.preventDefault();
-    return;
-  }
-});
-
-
-/* finish early */
-function endQuizEarly(){
-    // FIX 2: Tombol Selesaikan Lebih Awal sudah ada, pastikan tampilannya benar
-    if(!confirm('Akhiri latihan sekarang? Hasil akan dihitung berdasarkan soal yang telah dijawab.')) return;
-    stopTimer();
-    while(quizState.index < quizState.list.length){
-        const item=quizState.list[quizState.index];
-        const expected = (typeof item.a!=='undefined')? item.a : item.aVal;
-        // Tandai sebagai salah karena tidak dijawab
-        quizState.answers.push({q:item.q, correct:false, expected, given:null, time:0, timedOut:true, meta:item.meta||{}});
-        quizState.index++;
-    }
-    finishQuiz();
+  return a;
 }
 
-/* helpers: escapeHtml, shuffle, formatting */
-function escapeHtml(str){ if(!str) return ''; return String(str).replace(/[&<>"']/g, function(m){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m];}); }
-function shuffle(a){ for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } return a; }
-function formatSecondsFull(sec){ if(typeof sec!=='number') sec=Number(sec)||0; if(sec<60) return sec+' detik'; const m=Math.floor(sec/60); const s=sec%60; return (m+' menit'+(s>0? ' '+s+' detik':'')); }
-function formatSecondsToClock(sec){ if(sec<60) return '00:'+String(sec).padStart(2,'0'); const m=Math.floor(sec/60); const s=sec%60; return (m<10?('0'+m):m)+':'+(s<10?('0'+s):s); }
-function labelDifficulty(sec){ if(sec>=15) return 'Mudah'; if(sec>=10) return 'Sedang'; return 'Sukar'; }
+function getModeName(mode){
+  if(mode==='mcq') return 'P.Ganda'; // Disingkat agar muat di tabel
+  if(mode==='input') return 'Isian';
+  return '-';
+}
+function labelDifficulty(per){
+  if(per===15) return 'Mudah';
+  if(per===10) return 'Sedang';
+  if(per===5) return 'Sukar';
+  return '-';
+}
+function getLevelName(per){
+  if(per===15) return 'Mudah';
+  if(per===10) return 'Sedang';
+  if(per===5) return 'Sukar';
+  return '-';
+}
+
 
 /* init and bindings */
-document.addEventListener('DOMContentLoaded', ()=>{ 
-  loadIdentity(); 
-  renderMul(); 
-  renderHistory(); 
-  renderProgressGrid(); 
+document.addEventListener('DOMContentLoaded', ()=>{
+  loadIdentity();
+  renderMul();
+  renderHistory();
+  renderProgressGrid();
   
   // Panggil fungsi untuk menyiapkan tombol parameter
-  setupParamButtons(); 
+  setupParamButtons();
   
-  const t=localStorage.getItem(LS_KEY_TEACHER); 
-  if(t){ document.getElementById('teacherNumber').value=t; document.getElementById('teacherSaved').innerText='Nomor tersimpan: '+t; } 
+  const t=localStorage.getItem(LS_KEY_TEACHER);
+  if(t){ document.getElementById('teacherNumber').value=t; document.getElementById('teacherSaved').innerText='Nomor tersimpan: '+t; }
   
   showPanel('cover'); updateNavActive();
+  
+  // Perbarui binding share, karena pesan sekarang disiapkan di finishQuiz
   document.getElementById('copyResult').onclick=()=> navigator.clipboard.writeText(document.getElementById('sharePreview').innerText).then(()=> alert('Pesan disalin.'));
-  document.getElementById('shareWhats').onclick=()=>{ const saved=localStorage.getItem(LS_KEY_TEACHER); if(!saved){ if(confirm('Nomor guru belum disimpan. Mau salin pesan untuk dikirim manual?')){ navigator.clipboard.writeText(document.getElementById('sharePreview').innerText).then(()=> alert('Pesan disalin.')); } return; } const msg=document.getElementById('shareWhats').dataset.msg || ''; window.open('https://wa.me/'+saved+'?text='+msg,'_blank'); };
-  document.getElementById('inputName').addEventListener('keydown', (e)=>{ if(e.key==='Enter') saveIdentity(); }); document.getElementById('inputClass').addEventListener('keydown', (e)=>{ if(e.key==='Enter') saveIdentity(); }); document.getElementById('inputAbsen').addEventListener('keydown', (e)=>{ if(e.key==='Enter') saveIdentity(); });
+  document.getElementById('shareWhats').onclick=()=>{
+    const saved=localStorage.getItem(LS_KEY_TEACHER);
+    if(!saved){
+      if(confirm('Nomor guru belum disimpan. Mau salin pesan untuk dikirim manual?')){
+        navigator.clipboard.writeText(document.getElementById('sharePreview').innerText).then(()=> alert('Pesan disalin.'));
+      }
+      return;
+    }
+    const msg=document.getElementById('shareWhats').dataset.msg || '';
+    window.open('https://wa.me/'+saved+'?text='+msg,'_blank');
+  };
+
+  document.getElementById('inputName').addEventListener('keydown', (e)=>{ if(e.key==='Enter') saveIdentity(); });
+  document.getElementById('inputClass').addEventListener('keydown', (e)=>{ if(e.key==='Enter') saveIdentity(); });
+  document.getElementById('inputAbsen').addEventListener('keydown', (e)=>{ if(e.key==='Enter') saveIdentity(); });
 });
 </script>
 </body>
