@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
-<title>Belajar Perkalian & Pembagian — v5.5</title>
+<title>Belajar Perkalian & Pembagian — v5.6</title>
 <style>
 :root{--bg:#f7f9fc;--panel:#fff;--primary:#0b76c2;--accent:#0ea5a3;--muted:#6b7280;--card-radius:12px;--nav-height:64px;--grid-size:110px}
 *{box-sizing:border-box;font-family:Inter,system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif}
@@ -144,7 +144,7 @@ footer.app-footer{position:fixed;left:0;right:0;bottom:0;display:flex;justify-co
       <button id="headerBack" onclick="headerBack()" title="Kembali"><span class="ico">←</span> <span id="headerBackText"></span></button>
       <div>
         <div class="header-title">Belajar Perkalian & Pembagian</div>
-        <div style="font-size:11px;opacity:0.95">oleh MD.Prasojo — SMPN 05 Lumajang (v5.5)</div>
+        <div style="font-size:11px;opacity:0.95">oleh MD.Prasojo — SMPN 05 Lumajang (v5.6)</div>
       </div>
     </div>
     <div>
@@ -175,7 +175,6 @@ footer.app-footer{position:fixed;left:0;right:0;bottom:0;display:flex;justify-co
       <h2>Selamat Datang</h2>
       <div class="small">Isilah dengan nama lengkap, jangan diganti dengan nama yang lain agar progress belajar dan riwayat tidak terhapus.</div>
       <div class="small">Data tersimpan otomatis di perangkat dan akan muncul lagi saat aplikasi dibuka.</div>
-      <div class="small">Buat shortcut, pada chrome, klik titik tiga, kemudian pilih add to home screen atau tambahkan pada layar.</div>
       <div style="height:8px"></div>
      
       <div style="height:8px"></div>
@@ -186,7 +185,7 @@ footer.app-footer{position:fixed;left:0;right:0;bottom:0;display:flex;justify-co
       </div>
       <div style="height:8px"></div>
       <div style="display:flex;gap:8px">
-        <button class="btn" onclick="saveIdentity()">Simpan & Mulai</button>
+        <button class="btn" onclick="saveIdentity()">Simpan</button>
         <button class="btn outline" onclick="clearIdentity()">Hapus Identitas</button>
       </div>
       <div style="height:8px"></div>
@@ -250,7 +249,7 @@ footer.app-footer{position:fixed;left:0;right:0;bottom:0;display:flex;justify-co
     <div id="daftar" class="card" style="display:none">
       <div style="display:flex;justify-content:space-between;align-items:center">
         <strong>Daftar Perkalian</strong>
-        <div><select id="mulSelect" onchange="renderMul()"><option value="1">Perkalian 1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option><option value="6">6</option><option value="7">7</option><option value="8">8</option><option value="9">9</option><option value="10">10</option><option value="1-5">Perkalian 1–5</option><option value="6-10">Perkalian 6–10</option></select></div>
+        <div><select id="mulSelect" onchange="renderMul()"><option value="1">Perkalian 1</option><option value="2">Perkalian 2</option><option value="3">Perkalian 3</option><option value="4">Perkalian 4</option><option value="5">Perkalian 5</option><option value="6">Perkalian 6</option><option value="7">Perkalian 7</option><option value="8">Perkalian 8</option><option value="9">Perkalian 9</option><option value="10">Perkalian 10</option><option value="1-5">Perkalian 1–5</option><option value="6-10">Perkalian 6–10</option></select></div>
       </div>
       <div style="height:8px"></div>
       <div id="mulGrid" class="mul-grid" aria-live="polite"></div>
@@ -292,6 +291,8 @@ footer.app-footer{position:fixed;left:0;right:0;bottom:0;display:flex;justify-co
       </div>
       <div style="height:8px"></div>
       <div style="display:flex;gap:8px"><button class="btn" onclick="startDrill()">Mulai Drill</button><button class="btn outline" onclick="goBack()">Kembali</button></div>
+      <div style="height:8px"></div>
+      <div class="small">Dinyatakan menguasai (hijau, pada halaman progress) jika telah menyelesaikan latihan Drill <strong>Kesulitan Sukar (5 s)</strong> untuk semua mode <b>isian dan PG</b> dengan jumlah soal <b>10 atau 15</b>, dan mendapat skor <b>minimal 90%</b>.</div>
     </div>
 
     <div id="progress" class="card" style="display:none">
@@ -301,7 +302,7 @@ footer.app-footer{position:fixed;left:0;right:0;bottom:0;display:flex;justify-co
       <div style="height:8px"></div>
       <div class="small">Warna: hijau = hafal, kuning = belum hafal, merah = belum pernah dikerjakan.</div>
       <div style="height:8px"></div>
-      <div class="small">Dinyatakan menguasai (hijau) jika telah menyelesaikan latihan Drill <strong>Kesulitan Sukar (5 s)</strong> untuk semua mode <b>isian dan PG</b> dengan jumlah soal <b>10 atau 15</b>, dan mendapat skor **minimal 90%**. Klik kotak untuk melihat riwayat.</div>
+      <div class="small">Dinyatakan menguasai (hijau) jika telah menyelesaikan latihan Drill <strong>Kesulitan Sukar (5 s)</strong> untuk semua mode <b>isian dan PG</b> dengan jumlah soal <b>10 atau 15</b>, dan mendapat skor <b>minimal 90%</b>. Klik kotak untuk melihat riwayat.</div>
       <div style="height:8px"></div>
       <div id="progressGrid" class="progress-grid"></div>
       <div style="height:8px"></div>
@@ -309,6 +310,7 @@ footer.app-footer{position:fixed;left:0;right:0;bottom:0;display:flex;justify-co
         <button class="btn" onclick="sendProgress()">Kirim Progres ke Guru via WhatsApp</button>
         <button class="btn outline" onclick="copyProgress()">Salin Pesan Progres</button>
       </div>
+<div style="height:50px"></div>
     </div>
 
     <div id="latihan_mul" class="card" style="display:none">
@@ -551,7 +553,6 @@ function saveIdentity(){
   document.getElementById('progIdent').innerText=(name||'-')+' | '+(cls||'-')+' | '+(abs||'-');
   document.getElementById('histIdent').innerText=(name||'-')+' | '+(cls||'-')+' | '+(abs||'-');
   alert('Identitas tersimpan.');
-  navigate('mainMenu');
 }
 function updateIdentityDisplay(name,cls,abs){
   document.getElementById('showName').innerText=name||'-';
@@ -641,7 +642,7 @@ function setupParamButtons(){
 /* Quiz engine */
 let quizState=null, quizCallbackReplay=null, returnPanelAfterQuiz=null; // returnPanelAfterQuiz added
 
-// MODIFIKASI: Menggunakan getSelectedParam
+// MODIFIKASI: Menggunakan getSelectedParam dan shuffle
 function startDrill(){
   const table=parseInt(document.getElementById('drillMul').value,10);
   const count=parseInt(getSelectedParam('drillCount'),10);
@@ -651,15 +652,30 @@ function startDrill(){
   
   const list=[];
   for(let i=1;i<=count;i++){
-    const factor=(i%10)+1;
-    list.push({q:table+' × '+factor, a:table*factor, tExp:per, meta:{kind:'Drill Perkalian', table:table, mode:mode, difficulty:per, count:count}});
-  }
-  
-  // FIX 1: bind replay button for drill
-  quizCallbackReplay=()=>startDrill();
-  returnPanelAfterQuiz='drill'; // Set return panel for Drill
+    const baseFactor = (i % 10) + 1; // Mendapatkan faktor 1 hingga 10 secara berulang
+    
+    let factorA = table;
+    let factorB = baseFactor;
 
-  startQuiz({list, perDefault:per, type:'Latihan Drill Perkalian', drillMode:mode, detail:`Perkalian ${table} (${labelDifficulty(per)})`, meta:{table:table, mode:mode, difficulty:per, count:count}});
+    // PENGACAKAN FAKTOR: Tukar posisi faktor A dan B (50% peluang)
+    if(Math.random() < 0.5){
+        factorA = baseFactor;
+        factorB = table;
+    }
+
+    const q=`${factorA} × ${factorB}`;
+    const a=factorA*factorB;
+
+    list.push({q, a, tExp:per, meta:{kind:'Drill Perkalian', table:table, mode:mode, difficulty:per, count:count}});
+  }
+
+  // PENGACAKAN URUTAN SOAL: Acak seluruh daftar soal
+  shuffleArray(list); 
+
+  // FIX 1: bind replay button for drill
+  quizCallbackReplay=()=>startDrill(); 
+  returnPanelAfterQuiz='drill'; // Set return panel for Drill
+  startQuiz({list, perDefault:per, type:'Latihan Drill Perkalian', drillMode:mode, detail:`Perkalian ${table} (${labelDifficulty(per)})`, meta:{table:table, mode:mode, difficulty:per, count:count}}); 
 }
 
 function startMulPractice(){
@@ -679,10 +695,21 @@ function startMulPractice(){
     const f2=Math.floor(Math.random()*(10-1+1))+1;
     list.push({q:f1+' × '+f2, a:f1*f2, tExp:per, meta:{kind:'Latihan Perkalian', type:type, mode:mode, difficulty:per, count:count}});
   }
-  
+  // TAMBAHKAN: Acak urutan soal
+  shuffleArray(list);
+
   quizCallbackReplay=()=>startMulPractice();
   returnPanelAfterQuiz='latihan_mul'; // Set return panel for Latihan Perkalian
   startQuiz({list, perDefault:per, type:'Latihan Perkalian', drillMode:mode, detail:`Perkalian ${type} (${labelDifficulty(per)})`, meta:{type:type, mode:mode, difficulty:per, count:count}});
+}
+
+// Fungsi Fisher-Yates Shuffle untuk mengacak urutan array
+function shuffleArray(array) {
+    for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+    }
+    return array;
 }
 
 function startDivPractice(){
