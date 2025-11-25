@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
-<title>Belajar Perkalian & Pembagian — v5.6</title>
+<title>Belajar Perkalian & Pembagian — v5.7</title>
 <style>
 :root{--bg:#f7f9fc;--panel:#fff;--primary:#0b76c2;--accent:#0ea5a3;--muted:#6b7280;--card-radius:12px;--nav-height:64px;--grid-size:110px}
 *{box-sizing:border-box;font-family:Inter,system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif}
@@ -126,6 +126,31 @@ footer.app-footer{position:fixed;left:0;right:0;bottom:0;display:flex;justify-co
 .hist th:nth-child(7), .hist td:nth-child(7) { width: 15%; } /* Waktu */
 /* --------------------------------- */
 
+#infoText {
+    /* PENTING: Menetapkan tinggi minimum agar elemen di bawah tidak bergeser */
+    min-height: 2.5em; 
+    
+    text-align: center;
+    font-weight: bold;
+    padding-top: 5px; 
+    
+    /* Menyembunyikan pesan saat tidak ada jawaban */
+    opacity: 0; 
+    transition: opacity 0.3s ease-out; 
+}
+
+/* Kelas untuk menampilkan pesan (sudah digunakan di recordAnswer) */
+#infoText.show-result {
+    opacity: 1; 
+}
+
+/* Kelas warna (sudah ada di file Anda) */
+#infoText.correct {
+    color: var(--accent); 
+}
+#infoText.wrong {
+    color: red; 
+}
 
 @media (max-width:420px){
   /* PERUBAHAN REVISI FINAL: Sesuaikan ukuran prog-box yang lebih kecil untuk mobile */
@@ -144,7 +169,7 @@ footer.app-footer{position:fixed;left:0;right:0;bottom:0;display:flex;justify-co
       <button id="headerBack" onclick="headerBack()" title="Kembali"><span class="ico">←</span> <span id="headerBackText"></span></button>
       <div>
         <div class="header-title">Belajar Perkalian & Pembagian</div>
-        <div style="font-size:11px;opacity:0.95">oleh MD.Prasojo — SMPN 05 Lumajang (v5.6)</div>
+        <div style="font-size:11px;opacity:0.95">oleh MD.Prasojo — SMPN 05 Lumajang (v5.7)</div>
       </div>
     </div>
     <div>
@@ -722,15 +747,42 @@ function startDivPractice(){
   let maxDivisor=range==='1-20'?20:10;
   
   const list=[];
-  for(let i=0;i<count;i++){
-    // divisor * quotient = dividend
+  const uniqueQMap = new Map(); // Untuk melacak soal unik (mencegah duplikasi)
+
+  // MENGGUNAKAN WHILE untuk memastikan jumlah soal yang diminta tercapai
+  let attempts = 0;
+  const MAX_ATTEMPTS = count * 5; // Batasi percobaan untuk mencegah loop tak terbatas
+
+  while(list.length < count && attempts < MAX_ATTEMPTS){
+    attempts++;
+    
+    // 1. Logika pembuatan soal
     const divisor=Math.floor(Math.random()*maxDivisor)+1;
     let quotient=Math.floor(Math.random()*10)+1;
-    // ensure quotient is not 0 (if random starts from 0)
-    if(quotient===0) quotient=1; 
+    if(quotient===0) quotient=1; // memastikan hasil bagi tidak 0
+    
     const dividend=divisor*quotient;
-    if(dividend<=100) list.push({q:dividend+' ÷ '+divisor,a:quotient,tExp:per, meta:{kind:'Latihan Pembagian',range:range,mode:mode,difficulty:per,count:count}}); // <<< BARU: Simpan Mode
+    
+    // Cek batasan (dividend<=100) dan cek keunikan
+    if(dividend<=100) {
+        const qText = dividend+' ÷ '+divisor;
+        
+        if(!uniqueQMap.has(qText)){
+            // Soal unik ditemukan
+            uniqueQMap.set(qText, true); 
+            list.push({
+                q:qText,
+                a:quotient,
+                tExp:per, 
+                meta:{kind:'Latihan Pembagian',range:range,mode:mode,difficulty:per,count:count}
+            }); 
+        }
+    }
   }
+  
+  // Asumsi fungsi shuffleArray sudah ada
+  shuffleArray(list); 
+
   quizCallbackReplay=()=>startDivPractice();
   returnPanelAfterQuiz='latihan_div'; // Set return panel for Latihan Pembagian
   startQuiz({list, perDefault:per, type:'Latihan Pembagian', drillMode:mode, detail:`Pembagian ${range} (${labelDifficulty(per)})`, meta:{range:range, mode:mode, difficulty:per, count:count}});
@@ -893,24 +945,45 @@ function recordAnswer(givenAnswer, timedOut){
     timedOut: timedOut,
     time: timeTaken
   });
+  
+  // --- MULAI PERUBAHAN ---
+  const infoTextEl = document.getElementById('infoText');
+  const questionTextEl = document.getElementById('questionText');
 
+  // Hapus semua kelas hasil sebelum menampilkan hasil baru
+  infoTextEl.classList.remove('show-result', 'correct', 'wrong');
+  
+  // Hapus pewarnaan pada soal
+  questionTextEl.style.color='inherit'; 
+  
   if(!isCorrect) {
-    document.getElementById('infoText').innerText = timedOut ? '❌ Waktu Habis!' : '❌ Salah!';
-    document.getElementById('questionText').style.color='red';
+    infoTextEl.innerText = timedOut ? '❌ Waktu Habis!' : '❌ Salah!';
+    infoTextEl.classList.add('wrong'); // Tambahkan kelas warna Merah
+    
+    // Tampilkan pesan hasil (opacity: 1)
+    infoTextEl.classList.add('show-result'); 
+    
     setTimeout(()=>{
+      // Sembunyikan pesan hasil dan lanjut ke soal berikutnya
+      infoTextEl.classList.remove('show-result', 'wrong');
       quizState.index++;
-      document.getElementById('questionText').style.color='inherit';
       showQuestion();
     }, 500);
   } else {
-    document.getElementById('infoText').innerText = '✅ Benar!';
-    document.getElementById('questionText').style.color='var(--accent)';
+    infoTextEl.innerText = '✅ Benar!';
+    infoTextEl.classList.add('correct'); // Tambahkan kelas warna Accent
+    
+    // Tampilkan pesan hasil (opacity: 1)
+    infoTextEl.classList.add('show-result'); 
+    
     setTimeout(()=>{
+      // Sembunyikan pesan hasil dan lanjut ke soal berikutnya
+      infoTextEl.classList.remove('show-result', 'correct');
       quizState.index++;
-      document.getElementById('questionText').style.color='inherit';
       showQuestion();
     }, 300);
   }
+  // --- AKHIR PERUBAHAN ---
 }
 
 function endQuizEarly(){
